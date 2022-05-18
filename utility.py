@@ -55,33 +55,26 @@ def get_dots_in_line(t_ix, t_iy, r_ix, r_iy):
     dots_in_line = []
 
     if t_ix == r_ix:
-        dots_in_line += [(t_ix, iy) for iy in get_range(t_iy, r_iy)]
+        if t_iy > r_iy+1:
+            dots_in_line += [(t_ix, iy) for iy in get_range(r_iy+1, t_iy-1)]
+        elif r_iy > t_iy+1:
+            dots_in_line += [(t_ix, iy) for iy in get_range(t_iy+1, r_iy-1)]
     else:
         a = float(t_iy - r_iy)/float(t_ix-r_ix)
-        if r_ix > t_ix:
-            dots_in_line += [(t_ix, t_iy+iy)
-                             for iy in list(get_range(0, close_bound(0.5*a, 0)))]
-            if r_ix-t_ix != 1:
-                for ix in get_range(1, r_ix-t_ix-1):
-                    by = t_iy + a*ix
-                    min_bound = close_bound(by-0.5*a, by)
-                    max_bound = close_bound(by+0.5*a, by)
-                    dots_in_line += [(t_ix+ix, iy)
-                                     for iy in list(get_range(min_bound, max_bound))]
-            dots_in_line += [(r_ix, r_iy+iy)
-                             for iy in list(get_range(0, close_bound(-0.5*a, 0)))]
-        elif r_ix < t_ix:
-            dots_in_line += [(t_ix, t_iy+iy)
-                             for iy in list(get_range(0, close_bound(-0.5*a, 0)))]
-            if t_ix-r_ix != 1:
-                for ix in get_range(-1, r_ix-t_ix+1):
-                    by = t_iy + a*ix
-                    min_bound = close_bound(by-0.5*a, by)
-                    max_bound = close_bound(by+0.5*a, by)
-                    dots_in_line += [(t_ix+ix, iy)
-                                     for iy in list(get_range(min_bound, max_bound))]
-            dots_in_line += [(r_ix, r_iy+iy)
-                             for iy in list(get_range(0, close_bound(0.5*a, 0)))]
+        if r_ix > t_ix + 1:
+            for ix in get_range(1, r_ix-t_ix-1):
+                by = t_iy + a*ix
+                min_bound = close_bound(by-0.5*a, by)
+                max_bound = close_bound(by+0.5*a, by)
+                dots_in_line += [(t_ix+ix, iy)
+                                 for iy in list(get_range(min_bound, max_bound))]
+        elif r_ix + 1 < t_ix:
+            for ix in get_range(-1, r_ix-t_ix+1):
+                by = t_iy + a*ix
+                min_bound = close_bound(by-0.5*a, by)
+                max_bound = close_bound(by+0.5*a, by)
+                dots_in_line += [(t_ix+ix, iy)
+                                 for iy in list(get_range(min_bound, max_bound))]
     return dots_in_line
 
 
@@ -191,5 +184,4 @@ def get_max_v(dted_data, f, t_ix, t_iy, t_h, r_ix, r_iy, r_h):
     if len(v_info_list) == 0:
         return {"v": np.nan, "h": np.nan, "d1": np.nan, "d2": np.nan}
     else:
-        print(max(v_info_list, key=lambda x: x["v"]))
         return max(v_info_list, key=lambda x: x["v"])

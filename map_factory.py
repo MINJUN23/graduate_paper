@@ -249,8 +249,8 @@ def get_received_power_map(f, t_h=10, r_h=10, t_lon=127.3845, t_lat=36.3504, spa
 
 
 def get_max_v_map(f, t_h=10, r_h=10, t_lon=127.3845, t_lat=36.3504, span_lon=1.0, span_lat=1.0):
-    dted_data = get_local_dted(t_lat, t_lon, span_lat, span_lon)
-    t_ix, t_iy = get_index(dted_data, t_lat, t_lon)
+    dted_data = get_local_dted(t_lon, t_lat, span_lon, span_lat)
+    t_ix, t_iy = get_index(dted_data, t_lon, t_lat)
 
     # MATRIX OF (d, (h,d1,d2)) TUPLE. MidHeight would be none if there is no midheight
     V_ALL = []

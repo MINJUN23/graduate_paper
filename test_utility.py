@@ -38,19 +38,29 @@ class TestUtility(unittest.TestCase):
         t_ix, t_iy, r_ix, r_iy = 0, 0, 3, 4
         dots = get_dots_in_line(t_ix, t_iy, r_ix, r_iy)
         self.assertTrue(set(dots) == set(
-            [(0, 0), (0, 1), (1, 1), (1, 2), (2, 2), (2, 3), (3, 3), (3, 4)]))
+            [(1, 1), (1, 2), (2, 2), (2, 3)]))
         t_ix, t_iy, r_ix, r_iy = 0, 0, -3, -4
         dots = get_dots_in_line(t_ix, t_iy, r_ix, r_iy)
         self.assertTrue(set(dots) == set(
-            [(0, 0), (0, -1), (-1, -1), (-1, -2), (-2, -2), (-2, -3), (-3, -3), (-3, -4)]))
+            [(-1, -1), (-1, -2), (-2, -2), (-2, -3)]))
         t_ix, t_iy, r_ix, r_iy = 0, 0, -3, 4
         dots = get_dots_in_line(t_ix, t_iy, r_ix, r_iy)
         self.assertTrue(set(dots) == set(
-            [(0, 0), (0, 1), (-1, 1), (-1, 2), (-2, 2), (-2, 3), (-3, 3), (-3, 4)]))
+            [(-1, 1), (-1, 2), (-2, 2), (-2, 3)]))
         t_ix, t_iy, r_ix, r_iy = 0, 0, 3, -4
         dots = get_dots_in_line(t_ix, t_iy, r_ix, r_iy)
         self.assertTrue(set(dots) == set(
-            [(0, 0), (0, -1), (1, -1), (1, -2), (2, -2), (2, -3), (3, -3), (3, -4)]))
+            [(1, -1), (1, -2), (2, -2), (2, -3)]))
+        t_ix, t_iy, r_ix, r_iy = 0, 0, 0, 4
+        dots = get_dots_in_line(t_ix, t_iy, r_ix, r_iy)
+        print(set(dots))
+        self.assertTrue(set(dots) == set(
+            [(0, 1), (0, 2), (0, 3)]))
+        t_ix, t_iy, r_ix, r_iy = 0, 0, 0, -4
+        dots = get_dots_in_line(t_ix, t_iy, r_ix, r_iy)
+        print(set(dots))
+        self.assertTrue(set(dots) == set(
+            [(0, -1), (0, -2), (0, -3)]))
 
     def test_get_mid_height(self):
         r_lon, r_lat = 127.825, 35.63
