@@ -1,3 +1,4 @@
+from typing_extensions import assert_type
 import pandas as pd
 import numpy as np
 from get_map import get_local_dted
@@ -7,7 +8,8 @@ from pyproj import Proj
 from math import log10
 from transmitter import transmitters
 
-frequency_list = [1000000, 10000000, 100000000, 1000000000]
+frequency_list = [1000000, 5000000, 10000000, 50000000,
+                  100000000, 500000000, 1000000000, 5000000000]
 to_utm = Proj(proj='utm', zone=52, ellps='WGS84', preserve_units=False)
 r_h = 10
 
@@ -29,7 +31,7 @@ def create_CSV():
                 f, t_h, r_h, t_lon, t_lat, span_lon, span_lat)
             for i in range(len(DATA["RP"])):  # LAT_index
                 for j in range(len(DATA["RP"][0])):  # LON_index
-                    if not np.isnan(DATA["RP"][i][j]):
+                    if not np.isnan(DATA["RP"][i][j]) and not np.isnan(DATA["H"][i][j]):
                         RX, RY = to_utm(
                             DATA["X"][i][j], DATA["Y"][i][j])
                         RZ = dted_data["grid_height"][i][j] + r_h
@@ -38,6 +40,10 @@ def create_CSV():
                         DZ = RZ-TZ
                         H = DATA["H"][i][j]
                         RP = DATA["RP"][i][j]
+
+                        assert type(H) is float
+                        assert type(RP) is float
+                        
                         dfNew = pd.DataFrame(
                             {"DX": [DX], "DY": [DY], "DZ": [DZ],
                              "H": [H], "log_f": [log10(f)], "RP": [RP]})
@@ -45,6 +51,7 @@ def create_CSV():
             print(
                 f"Processing {name} Transmitter For Ray {convert_to_si(f)}Hz Finish")
     df_shuffled = df.sample(frac=1).reset_index(drop=True)
+    print("CSV DATA IS CREATED")
     df_shuffled.to_csv("csv/data.csv")
 
 
