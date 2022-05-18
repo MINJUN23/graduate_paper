@@ -88,8 +88,8 @@ class TestUtility(unittest.TestCase):
         gain_diffrence = get_friis_gain(f, r)-get_friis_gain(f, r*10)
         self.assertTrue(gain_diffrence < 20.01 and gain_diffrence > 19.99)
 
-    def test_get_gain(self):
-        gain = get_gain(1000000, 1000, 100, 500, 500)
+    def test_get_received_power(self):
+        gain = get_received_power(1000000, 1000, 100, 500, 500)
         self.assertTrue(gain > -42.87 and gain < -42.86)
 
 

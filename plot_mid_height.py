@@ -1,5 +1,5 @@
 import matplotlib.pyplot as plt
-from map_factory import get_midheight_map
+from map_factory import get_mid_height_map
 from transmitter import transmitters
 
 r_h = 10
@@ -7,7 +7,7 @@ r_h = 10
 
 def plot_midheight_from_transmitter(transmitter):
     name, t_lon, t_lat, span_lon, span_lat, t_h = transmitter()
-    DATA = get_midheight_map(
+    DATA = get_mid_height_map(
         t_h, r_h, t_lon, t_lat, span_lon, span_lat)
     fig = plt.pcolormesh(
         DATA["X"], DATA["Y"], DATA["H"], shading="auto")

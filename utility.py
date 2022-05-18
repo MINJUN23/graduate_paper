@@ -115,7 +115,7 @@ def get_loss_by_knife_edge(v):
         return np.NaN
 
 
-def get_gain(f, r, h, d1, d2):
+def get_received_power(f, r, h, d1, d2):
     try:
         v = get_v_factor(h, f, d1, d2)
         loss = get_loss_by_knife_edge(v)
@@ -183,4 +183,5 @@ def get_max_v(dted_data, f, t_ix, t_iy, t_h, r_ix, r_iy, r_h):
     if len(v_info_list) == 0:
         return {"v": np.nan, "h": np.nan, "d1": np.nan, "d2": np.nan}
     else:
-        return max(v_info_list, key=lambda x: x["v"])
+        max_V = max(v_info_list, key=lambda x: x["v"])
+        return max_V

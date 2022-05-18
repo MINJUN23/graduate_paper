@@ -1,5 +1,5 @@
 import matplotlib.pyplot as plt
-from map_factory import get_gain_map
+from map_factory import get_received_power_map
 from transmitter import transmitters
 from utility import convert_to_si
 
@@ -9,10 +9,10 @@ r_h = 10
 
 def plot_gain_near_transmitter(frequency, transmitter):
     name, t_lon, t_lat, span_lon, span_lat, t_h = transmitter()
-    DATA = get_gain_map(
+    DATA = get_received_power_map(
         frequency, t_h, r_h, t_lon, t_lat, span_lon, span_lat)
     fig = plt.pcolormesh(
-        DATA["X"], DATA["Y"], DATA["G"], shading="auto")
+        DATA["X"], DATA["Y"], DATA["RP"], shading="auto")
     fig.axes.set_aspect("equal")
     plt.plot(t_lon, t_lat, "ro", markersize=2)
     plt.xlabel("LAT, (degree)")
@@ -21,6 +21,7 @@ def plot_gain_near_transmitter(frequency, transmitter):
     cbar = plt.colorbar(fig)
     cbar.set_label('Received Power (dBm)')
     plt.savefig(f"ReceivedPowerImgs/{name}_{convert_to_si(frequency)}Hz.png")
+    print(f"{name}_{convert_to_si(frequency)}Hz.png CREATED")
     plt.clf()
 
 
