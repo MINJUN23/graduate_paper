@@ -7,10 +7,10 @@ r_h = 10
 
 def plot_midheight_from_transmitter(transmitter):
     name, t_lon, t_lat, span_lon, span_lat, t_h = transmitter()
-    MD = get_midheight_map(
+    DATA = get_midheight_map(
         t_h, r_h, t_lon, t_lat, span_lon, span_lat)
     fig = plt.pcolormesh(
-        MD["X"], MD["Y"], MD["D"], shading="auto")
+        DATA["X"], DATA["Y"], DATA["H"], shading="auto")
     fig.axes.set_aspect("equal")
     plt.plot(t_lon, t_lat, "ro", markersize=2)
     plt.xlabel("LAT, (degree)")

@@ -38,27 +38,25 @@ class TestUtility(unittest.TestCase):
         t_ix, t_iy, r_ix, r_iy = 0, 0, 3, 4
         dots = get_dots_in_line(t_ix, t_iy, r_ix, r_iy)
         self.assertTrue(set(dots) == set(
-            [(1, 1), (1, 2), (2, 2), (2, 3)]))
+            [(0, 1), (1, 1), (1, 2), (2, 2), (2, 3), (3, 3)]))
         t_ix, t_iy, r_ix, r_iy = 0, 0, -3, -4
         dots = get_dots_in_line(t_ix, t_iy, r_ix, r_iy)
         self.assertTrue(set(dots) == set(
-            [(-1, -1), (-1, -2), (-2, -2), (-2, -3)]))
+            [(0, -1), (-1, -1), (-1, -2), (-2, -2), (-2, -3), (-3, -3)]))
         t_ix, t_iy, r_ix, r_iy = 0, 0, -3, 4
         dots = get_dots_in_line(t_ix, t_iy, r_ix, r_iy)
         self.assertTrue(set(dots) == set(
-            [(-1, 1), (-1, 2), (-2, 2), (-2, 3)]))
+            [(0, 1), (-1, 1), (-1, 2), (-2, 2), (-2, 3), (-3, 3)]))
         t_ix, t_iy, r_ix, r_iy = 0, 0, 3, -4
         dots = get_dots_in_line(t_ix, t_iy, r_ix, r_iy)
         self.assertTrue(set(dots) == set(
-            [(1, -1), (1, -2), (2, -2), (2, -3)]))
+            [(0, -1), (1, -1), (1, -2), (2, -2), (2, -3), (3, -3)]))
         t_ix, t_iy, r_ix, r_iy = 0, 0, 0, 4
         dots = get_dots_in_line(t_ix, t_iy, r_ix, r_iy)
-        print(set(dots))
         self.assertTrue(set(dots) == set(
             [(0, 1), (0, 2), (0, 3)]))
         t_ix, t_iy, r_ix, r_iy = 0, 0, 0, -4
         dots = get_dots_in_line(t_ix, t_iy, r_ix, r_iy)
-        print(set(dots))
         self.assertTrue(set(dots) == set(
             [(0, -1), (0, -2), (0, -3)]))
 
@@ -69,7 +67,7 @@ class TestUtility(unittest.TestCase):
         # 해발고도 200m지점의 recevier에서 중간에 최대높이 약 1300m의 산맥을 만난다. 그래서 약 1100m정도의 최대 height가 나와야 한다.
         mid_height = get_mid_height(local_dted_data, t_ix,
                                     t_iy, 10, r_ix, r_iy, 10)
-        self.assertTrue(mid_height[1][0] > 1100)
+        self.assertTrue(mid_height > 1100)
 
     def test_get_loss_by_knife_edge(self):
         # v=-0.78이면 loss는 0에 가까워야 함. Propagation of radiowaves 140p, 단 식을 v > -0.78일때만 사용하므로 v=-0.77로 적용함.

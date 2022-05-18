@@ -113,15 +113,15 @@ def get_midheight_map(t_h=10, r_h=10, t_lon=127.3845, t_lat=36.3504, span_lon=1.
     for i in range(len(dted_data["grid_lat"])):
         MH_row = []
         for j in range(len(dted_data["grid_lon"])):
-            MH = get_mid_height(dted_data, t_ix, t_iy, t_h, i, j, r_h)
+            MH = get_mid_height(dted_data, t_ix, t_iy, t_h, j, i, r_h)
             try:
                 MH_row.append(MH[1][0])
             except TypeError:
-                MH_row.append(0)
+                MH_row.append(np.nan)
         MH_all.append(MH_row)
     LON, LAT = np.meshgrid(
         dted_data["grid_lon"], dted_data["grid_lat"])   # lon & lat tiles
-    return {"X": LON, "Y": LAT, "D": MH_all}
+    return {"X": LON, "Y": LAT, "H": MH_all}
 
 
 def get_LOS_map(f, t_h=10, r_h=10, t_lat=36.3504, t_lon=127.3845, span_lat=1.0, span_lon=1.0):

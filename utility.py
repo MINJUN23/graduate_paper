@@ -55,26 +55,35 @@ def get_dots_in_line(t_ix, t_iy, r_ix, r_iy):
     dots_in_line = []
 
     if t_ix == r_ix:
-        if t_iy > r_iy+1:
-            dots_in_line += [(t_ix, iy) for iy in get_range(r_iy+1, t_iy-1)]
-        elif r_iy > t_iy+1:
-            dots_in_line += [(t_ix, iy) for iy in get_range(t_iy+1, r_iy-1)]
+        dots_in_line += [(t_ix, iy) for iy in get_range(t_iy, r_iy)]
     else:
         a = float(t_iy - r_iy)/float(t_ix-r_ix)
-        if r_ix > t_ix + 1:
-            for ix in get_range(1, r_ix-t_ix-1):
-                by = t_iy + a*ix
-                min_bound = close_bound(by-0.5*a, by)
-                max_bound = close_bound(by+0.5*a, by)
-                dots_in_line += [(t_ix+ix, iy)
-                                 for iy in list(get_range(min_bound, max_bound))]
-        elif r_ix + 1 < t_ix:
-            for ix in get_range(-1, r_ix-t_ix+1):
-                by = t_iy + a*ix
-                min_bound = close_bound(by-0.5*a, by)
-                max_bound = close_bound(by+0.5*a, by)
-                dots_in_line += [(t_ix+ix, iy)
-                                 for iy in list(get_range(min_bound, max_bound))]
+        if r_ix > t_ix:
+            dots_in_line += [(t_ix, t_iy+iy)
+                             for iy in list(get_range(0, close_bound(0.5*a, 0)))]
+            if r_ix-t_ix != 1:
+                for ix in get_range(1, r_ix-t_ix-1):
+                    by = t_iy + a*ix
+                    min_bound = close_bound(by-0.5*a, by)
+                    max_bound = close_bound(by+0.5*a, by)
+                    dots_in_line += [(t_ix+ix, iy)
+                                     for iy in list(get_range(min_bound, max_bound))]
+            dots_in_line += [(r_ix, r_iy+iy)
+                             for iy in list(get_range(0, close_bound(-0.5*a, 0)))]
+        elif r_ix < t_ix:
+            dots_in_line += [(t_ix, t_iy+iy)
+                             for iy in list(get_range(0, close_bound(-0.5*a, 0)))]
+            if t_ix-r_ix != 1:
+                for ix in get_range(-1, r_ix-t_ix+1):
+                    by = t_iy + a*ix
+                    min_bound = close_bound(by-0.5*a, by)
+                    max_bound = close_bound(by+0.5*a, by)
+                    dots_in_line += [(t_ix+ix, iy)
+                                     for iy in list(get_range(min_bound, max_bound))]
+            dots_in_line += [(r_ix, r_iy+iy)
+                             for iy in list(get_range(0, close_bound(0.5*a, 0)))]
+    dots_in_line.remove((t_ix, t_iy))
+    dots_in_line.remove((r_ix, r_iy))
     return dots_in_line
 
 
@@ -128,29 +137,19 @@ def get_mid_height(dted_data, t_ix, t_iy, t_h, r_ix, r_iy, r_h):
                     * (t_y-r_y) + (t_z + t_h - r_z - r_h) * (t_z + t_h - r_z - r_h))
     D = sqrt((t_x-r_x)*(t_x-r_x) + (t_y-r_y)*(t_y-r_y))
     DZ = r_z + r_h - t_z - t_h
-    blocked_dots = []
+    dots = []
     for dot in dots_in_line:
-        try:
-            x, y = to_utm(dted_data["grid_lon"][dot[0]],
-                          dted_data["grid_lat"][dot[1]])
-            z = dted_data["grid_height"][dot[1]][dot[0]] + r_h
-            d = sqrt((x-t_x) * (x-t_x) + (y-t_y)*(y-t_y))
-            lz = t_z + t_h + DZ / D * d
-            if z > lz:
-                blocked_dots.append((distance, (z - lz, d, D - d), dot))
-        except IndexError:
-            print(f"get_mid_height indexError : {dot}")
-        except Exception as e:
-            print(e, "Exception in get_mid_height")
-    if len(blocked_dots) == 0:
+        x, y = to_utm(dted_data["grid_lon"][dot[0]],
+                      dted_data["grid_lat"][dot[1]])
+        z = dted_data["grid_height"][dot[1]][dot[0]]
+        d = sqrt((x-t_x) * (x-t_x) + (y-t_y)*(y-t_y))
+        lz = t_z + t_h + DZ / D * d
+        dots.append((distance, (z - lz, d, D - d), dot))
+    if len(dots) == 0:
         return (distance, np.NaN)
     else:
-        return max(blocked_dots, key=lambda x: x[1][0])
-
-
-def max_key(x):
-    if np.isnan(x):
-        return -1
+        max_dot = max(dots, key=lambda x: x[1][0])
+        return max_dot
 
 
 def get_max_v(dted_data, f, t_ix, t_iy, t_h, r_ix, r_iy, r_h):
