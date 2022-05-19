@@ -1,6 +1,6 @@
 import matplotlib.pyplot as plt
-from map_factory import get_mid_height_map
-from transmitter import transmitters
+from ..map_factory import get_mid_height_map
+from ..transmitter import transmitters
 
 r_h = 10
 

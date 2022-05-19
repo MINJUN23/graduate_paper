@@ -2,9 +2,9 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
-from get_map import get_utm_from_dted, get_korea_dted, get_local_dted
-from utility import to_utm
-from transmitter import transmitters
+from ..get_map import get_utm_from_dted, get_korea_dted, get_local_dted
+from ..utility import to_utm
+from ..transmitter import transmitters
 
 
 def plot_korea_utm():

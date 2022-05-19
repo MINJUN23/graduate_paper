@@ -1,6 +1,6 @@
 import numpy as np
 from math import sqrt, atan, log10
-from utility import to_utm, get_index, get_mid_height, get_received_power, get_max_v
+from utility import get_v_factor, to_utm, get_index, get_mid_height, get_received_power, get_max_v
 from get_map import get_korea_dted, get_local_dted, get_height
 from model import model, scaler
 
@@ -124,6 +124,26 @@ def get_mid_height_map(t_h=10, r_h=10, t_lon=127.3845, t_lat=36.3504, span_lon=1
         dted_data["grid_lon"], dted_data["grid_lat"])   # lon & lat tiles
     return {"X": LON, "Y": LAT, "H": MH_all}
 
+def get_v_by_mid_height_map(f, t_h=10, r_h=10, t_lon=127.3845, t_lat=36.3504, span_lon=1.0, span_lat=1.0):
+    dted_data = get_local_dted(t_lon, t_lat, span_lon, span_lat)
+    t_ix, t_iy = get_index(dted_data, t_lon, t_lat)
+
+    # MATRIX OF (d, (h,d1,d2)) TUPLE.
+    # (h,d1,d2) would be nan in case of LOS
+    V_all = []
+    for i in range(len(dted_data["grid_lat"])):
+        V_row = []
+        for j in range(len(dted_data["grid_lon"])):
+            MH = get_mid_height(dted_data, t_ix, t_iy, t_h, j, i, r_h)
+            try:
+                V = get_v_factor(MH[1][0], f, MH[1][1], MH[1][2])
+                V_row.append(V)
+            except TypeError:
+                V_row.append(np.nan)
+        V_all.append(V_row)
+    LON, LAT = np.meshgrid(
+        dted_data["grid_lon"], dted_data["grid_lat"])   # lon & lat tiles
+    return {"X": LON, "Y": LAT, "V": V_all}
 
 def get_max_v_map(f, t_h=10, r_h=10, t_lon=127.3845, t_lat=36.3504, span_lon=1.0, span_lat=1.0):
     dted_data = get_local_dted(t_lon, t_lat, span_lon, span_lat)

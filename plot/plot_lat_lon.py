@@ -6,8 +6,8 @@ Loads DTED level 0 data and plot near Daejeon
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
-from get_map import get_korea_dted, get_local_dted
-from transmitter import transmitters
+from ..get_map import get_korea_dted, get_local_dted
+from ..transmitter import transmitters
 
 
 def plot_korea(t_lon=127.3845, t_lat=36.3504, span_lon=1.0, span_lat=1.0):
