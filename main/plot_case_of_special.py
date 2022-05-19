@@ -1,4 +1,6 @@
 import matplotlib.pyplot as plt
+import matplotlib.patches as patches
+import numpy as np
 from math import sqrt
 from map_factory.get_map import get_local_dted
 from map_factory.utility.utility import to_utm, get_dots_in_line, get_v_factor
@@ -118,5 +120,43 @@ def minus_height_of_max_v_case():
     print(f"under-200_height_of_max_v_{name}.png CREATED")
     plt.clf()
 
-minus_midheight_case()
-minus_height_of_max_v_case()
+
+def plot_example_of_dots_in_line(t_x,t_y,r_x,r_y):
+    dots = [(t_x,t_y)]
+    dots += get_dots_in_line(t_x,t_y,r_x,r_y)
+    dots += [(r_x,r_y)]
+    x_list = [t_x,r_x]
+    y_list = [t_y,r_y]
+
+    fig, ax =plt.subplots()
+    ax.set_xlim([t_x-2,r_x+2])
+    ax.set_ylim([t_y-2,r_y+2])
+
+    x_ticks = np.arange(t_x-1.5, r_x+2.5, 1)
+    x_major_ticks = np.arange(t_x-1.5, r_x+2.5, 10)
+    y_ticks = np.arange(t_y-1.5, r_y+2.5, 1)
+    y_major_ticks =np.arange(t_y-1.5, r_y+2.5, 10)
+
+    ax.set_xticks(x_ticks, minor=True)
+    ax.set_xticks(x_major_ticks,)
+    ax.set_yticks(y_ticks, minor=True)
+    ax.set_yticks(y_major_ticks)
+    ax.grid(which='minor', alpha=0.2)
+    ax.grid(which='major', alpha=0.5)
+
+    plt.plot(x_list, y_list)
+    for dot in dots:
+        ax.add_patch(
+        patches.Rectangle(
+            (dot[0]-0.5,dot[1]-0.5),
+            1,
+            1,
+            edgecolor = 'blue',
+            fill=True, 
+            alpha=0.5
+        ))
+
+
+    plt.show()
+
+plot_example_of_dots_in_line(1,2,18,37)
