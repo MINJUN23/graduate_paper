@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 from math import sqrt
 from map_factory.get_map import get_local_dted
-from utility.utility import to_utm, get_dots_in_line, get_v_factor
+from map_factory.utility.utility import to_utm, get_dots_in_line, get_v_factor
 from environments.transmitter import transmitters
 
 DeogyuTransmitter = transmitters[1]

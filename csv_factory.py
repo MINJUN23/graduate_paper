@@ -1,12 +1,12 @@
 from typing_extensions import assert_type
-import pandas as pd
-import numpy as np
-from get_map import get_local_dted
-from map_factory import get_csv_map
-from utility import get_index, convert_to_si
 from pyproj import Proj
 from math import log10
-from transmitter import transmitters
+import pandas as pd
+import numpy as np
+from main.map_factory.get_map import get_local_dted
+from main.map_factory.map_factory import get_csv_map
+from main.map_factory.utility.utility import get_index, convert_to_si
+from main.environments.transmitter import transmitters
 
 frequency_list = [1000000, 5000000, 10000000, 50000000,
                   100000000, 500000000, 1000000000, 5000000000]
@@ -52,7 +52,7 @@ def create_CSV():
                 f"Processing {name} Transmitter For Ray {convert_to_si(f)}Hz Finish")
     df_shuffled = df.sample(frac=1).reset_index(drop=True)
     print("CSV DATA IS CREATED")
-    df_shuffled.to_csv("csv/data.csv")
+    df_shuffled.to_csv("MLP/DATA/data.csv")
 
 
 create_CSV()

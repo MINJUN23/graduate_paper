@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 from map_factory.map_factory import get_distance_map, get_difference_map, get_slope_map
 from environments.transmitter import transmitters
-from utility.utility import to_utm
+from map_factory.utility.utility import to_utm
 # 대전의 위도 : 36.3504° N
 # 대전의 경도 : 127.3845° E
 

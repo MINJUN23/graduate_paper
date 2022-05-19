@@ -3,7 +3,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 from map_factory.get_map import get_utm_from_dted, get_korea_dted, get_local_dted
-from utility.utility import to_utm
+from map_factory.utility.utility import to_utm
 from environments.transmitter import transmitters
 
 

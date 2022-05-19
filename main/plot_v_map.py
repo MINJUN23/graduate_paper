@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 from map_factory.map_factory import get_max_v_map, get_mid_height_map, get_v_by_mid_height_map
-from utility.utility import convert_to_si
+from map_factory.utility.utility import convert_to_si
 from environments.transmitter import transmitters
 
 
@@ -121,7 +121,6 @@ def plot_max_v_and_v_by_max_midheight(transmitter):
         frequency, t_h, r_h, t_lon, t_lat, span_lon, span_lat)
     v_min = min([np.nanmin(V["V"]), np.nanmin(V_BY_MID_HEIGHT["V"])])
     v_max = max([np.nanmax(V["V"]), np.nanmax(V_BY_MID_HEIGHT["V"])])
-    print(v_min, v_max)
 
     fig = plt.pcolormesh(
         V_BY_MID_HEIGHT["X"], V_BY_MID_HEIGHT["Y"], V_BY_MID_HEIGHT["V"], shading="auto")

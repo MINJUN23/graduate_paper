@@ -1,8 +1,9 @@
 import numpy as np
+import pandas as pd
 from math import sqrt, atan, log10
-from utility import get_v_factor, to_utm, get_index, get_mid_height, get_received_power, get_max_v
-from ..get_map import get_korea_dted, get_local_dted, get_height
-from model import model, scaler
+from map_factory.utility.utility import get_v_factor, to_utm, get_index, get_mid_height, get_received_power, get_max_v
+from map_factory.utility.model import model, scaler
+from map_factory.get_map import get_korea_dted, get_local_dted, get_height
 
 
 def get_height_map(t_lon, t_lat):
@@ -185,6 +186,26 @@ def get_received_power_map(f, t_h=10, r_h=10, t_lon=127.3845, t_lat=36.3504, spa
     return {"X": LON, "Y": LAT, "RP": RP_all}
 
 
+def get_received_power_by_mid_height_map(f, t_h=10, r_h=10, t_lon=127.3845, t_lat=36.3504, span_lon=1.0, span_lat=1.0):
+    dted_data = get_local_dted(t_lon, t_lat, span_lon, span_lat)
+    t_ix, t_iy = get_index(dted_data, t_lon, t_lat)
+
+    # MATRIX OF (d, (h,d1,d2)) TUPLE. MidHeight would be none if there is no midheight
+    RP_all = []
+    for i in range(len(dted_data["grid_lat"])):
+        RP_row = []
+        for j in range(len(dted_data["grid_lon"])):
+            MH = get_mid_height(dted_data, t_ix, t_iy, t_h, j, i, r_h)
+            try:
+                RP = get_received_power(f, MH[1][1] + MH[1][2], MH[1][0], MH[1][1], MH[1][2])
+                RP_row.append(RP)
+            except TypeError:
+                RP_row.append(np.nan)
+        RP_all.append(RP_row)
+    LON, LAT = np.meshgrid(
+        dted_data["grid_lon"], dted_data["grid_lat"])   # lon & lat tiles
+    return {"X": LON, "Y": LAT, "RP": RP_all}
+
 def get_csv_map(f, t_h=10, r_h=10, t_lon=127.3845, t_lat=36.3504, span_lon=1.0, span_lat=1.0):
     dted_data = get_local_dted(t_lon, t_lat, span_lon, span_lat)
     t_ix, t_iy = get_index(dted_data, t_lon, t_lat)
@@ -212,14 +233,14 @@ def get_csv_map(f, t_h=10, r_h=10, t_lon=127.3845, t_lat=36.3504, span_lon=1.0, 
     return {"X": LON, "Y": LAT, "RP": RP_all, "H": H_all}
 
 
-def get_predicted_map(f, t_h=10, r_h=10, t_lon=127.3845, t_lat=36.3504, span_lon=1.0, span_lat=1.0):
+def get_predicted_power_map(f, t_h=10, r_h=10, t_lon=127.3845, t_lat=36.3504, span_lon=1.0, span_lat=1.0):
     dted_data = get_local_dted(t_lon, t_lat, span_lon, span_lat)
     t_ix, t_iy = get_index(dted_data, t_lon, t_lat)
     t_x, t_y = to_utm(t_lon, t_lat)
     t_z = get_height(t_lon, t_lat)
-    P_all = []
+    RP_all = []
     for i in range(len(dted_data["grid_lat"])):
-        P_row = []
+        RP_row = []
         for j in range(len(dted_data["grid_lon"])):
             try:
                 x, y = to_utm(dted_data["grid_lon"][j],
@@ -230,12 +251,13 @@ def get_predicted_map(f, t_h=10, r_h=10, t_lon=127.3845, t_lat=36.3504, span_lon
                 DZ = z - t_z
                 H = get_mid_height(dted_data, t_ix, t_iy, t_h, j, i, r_h)[1][0]
                 # {"DX": [], "DY": [], "DZ": [], "H": [], "log_f": []
-                INPUT = [[DX, DY, DZ, H, log10(f)]]
-                P = model.predict(INPUT)[0]
-                P_row.append(P)
+                INPUT = pd.DataFrame([[DX[0], DY[0], DZ, H, log10(f)]], columns=["DX",'DY',"DZ","H","log_f"])
+                INPUT = scaler.transform(INPUT)
+                RP = model.predict(INPUT)[0][0]
+                RP_row.append(RP)
             except Exception:
-                P_row.append(np.nan)
-        P_all.append(P_row)
+                RP_row.append(np.nan)
+        RP_all.append(RP_row)
     LON, LAT = np.meshgrid(
         dted_data["grid_lon"], dted_data["grid_lat"])   # lon & lat tiles
-    return {"X": LON, "Y": LAT, "P": P_all}
+    return {"X": LON, "Y": LAT, "RP": RP_all}
