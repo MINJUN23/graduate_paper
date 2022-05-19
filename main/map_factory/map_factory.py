@@ -1,7 +1,7 @@
 import numpy as np
 from math import sqrt, atan, log10
 from utility import get_v_factor, to_utm, get_index, get_mid_height, get_received_power, get_max_v
-from get_map import get_korea_dted, get_local_dted, get_height
+from ..get_map import get_korea_dted, get_local_dted, get_height
 from model import model, scaler
 
 

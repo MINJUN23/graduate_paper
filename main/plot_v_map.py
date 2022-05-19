@@ -1,9 +1,9 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-from ..map_factory import get_max_v_map, get_mid_height_map, get_v_by_mid_height_map
-from ..utility import convert_to_si
-from ..transmitter import transmitters
+from map_factory.map_factory import get_max_v_map, get_mid_height_map, get_v_by_mid_height_map
+from utility.utility import convert_to_si
+from environments.transmitter import transmitters
 
 
 r_h = 10
@@ -26,7 +26,7 @@ def plot_max_v_from_transmitter(transmitter):
     plt.title(f"Max value of v factor of the ray near {name}")
     cbar = plt.colorbar(fig)
     cbar.set_label('V - factor')
-    plt.savefig(f"V_IMGS/MAXV_{name}_{convert_to_si(frequency)}Hz.png")
+    plt.savefig(f"main/IMGS/V_MAP/MAXV_{name}_{convert_to_si(frequency)}Hz.png")
     print(f"MAXV_{name}_{convert_to_si(frequency)}Hz.png CREATED")
     plt.clf()
 
@@ -47,7 +47,7 @@ def plot_height_of_max_v_from_transmitter(transmitter):
     plt.clim(min_h, max_h)
     cbar.set_label('Height, m')
     plt.savefig(
-        f"V_IMGS/H_OF_MAXV_{name}_{convert_to_si(frequency)}Hz.png")
+        f"main/IMGS/V_MAP/H_OF_MAXV_{name}_{convert_to_si(frequency)}Hz.png")
     print(f"H_OF_MAXV_{name}_{convert_to_si(frequency)}Hz.png CREATED")
     plt.clf()
 
@@ -67,7 +67,7 @@ def plot_midheight_from_transmitter(transmitter):
     plt.clim(min_h, max_h)
     cbar.set_label('Height, m')
     plt.savefig(
-        f"V_IMGS/MAX_MIDHEIGHT_{name}.png")
+        f"main/IMGS/V_MAP/MAX_MIDHEIGHT_{name}.png")
     print(f"MAX_MIDHEIGHT_{name}.png CREATED")
     plt.clf()
 
@@ -93,7 +93,7 @@ def plot_mvh_and_mh(transmitter):
     plt.clim(v_min, v_max)
     cbar.set_label('Height, m')
     plt.savefig(
-        f"V_IMGS/MAX_MIDHEIGHT_{name}.png")
+        f"main/IMGS/V_MAP/MAX_MIDHEIGHT_{name}.png")
     print(f"MAX_MIDHEIGHT_{name}.png CREATED")
     plt.clf()
 
@@ -109,7 +109,7 @@ def plot_mvh_and_mh(transmitter):
     plt.clim(v_min, v_max)
     cbar.set_label('Height, m')
     plt.savefig(
-        f"V_IMGS/H_OF_MAXV_{name}_{convert_to_si(frequency)}Hz.png")
+        f"main/IMGS/V_MAP/H_OF_MAXV_{name}_{convert_to_si(frequency)}Hz.png")
     print(f"H_OF_MAXV_{name}_{convert_to_si(frequency)}Hz.png CREATED")
     plt.clf()
 
@@ -134,7 +134,7 @@ def plot_max_v_and_v_by_max_midheight(transmitter):
     plt.clim(v_min, v_max)
     cbar.set_label('V-factor')
     plt.savefig(
-        f"V_IMGS/V_by_midheight_{name}_{convert_to_si(frequency)}Hz.png")
+        f"main/IMGS/V_MAP/V_by_midheight_{name}_{convert_to_si(frequency)}Hz.png")
     print(f"V_by_midheight_{name}_{convert_to_si(frequency)}Hz.png CREATED")
     plt.clf()
 
@@ -150,7 +150,7 @@ def plot_max_v_and_v_by_max_midheight(transmitter):
     plt.clim(v_min, v_max)
     cbar.set_label('V-factor')
     plt.savefig(
-        f"V_IMGS/MAXV_{name}_{convert_to_si(frequency)}Hz.png")
+        f"main/IMGS/V_MAP/MAXV_{name}_{convert_to_si(frequency)}Hz.png")
     print(f"MAXV_{name}_{convert_to_si(frequency)}Hz.png CREATED")
     plt.clf()
 
@@ -167,7 +167,7 @@ def plot_max_v_and_v_by_max_midheight(transmitter):
     cbar = plt.colorbar(fig)
     cbar.set_label('V-factor')
     plt.savefig(
-        f"V_IMGS/V_DIFFERENCE_{name}_{convert_to_si(frequency)}Hz.png")
+        f"main/IMGS/V_MAP/V_DIFFERENCE_{name}_{convert_to_si(frequency)}Hz.png")
     print(f"V_DIFFERENCE_{name}_{convert_to_si(frequency)}Hz.png CREATED")
     plt.clf()
 

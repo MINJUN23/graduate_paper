@@ -1,6 +1,6 @@
 import numpy as np
 import pandas as pd
-from utility import to_utm
+from utility.utility import to_utm
 
 
 def get_korea_dted():

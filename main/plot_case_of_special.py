@@ -1,8 +1,8 @@
 import matplotlib.pyplot as plt
 from math import sqrt
-from ..get_map import get_local_dted
-from ..utility import to_utm, get_dots_in_line, get_v_factor
-from ..transmitter import transmitters
+from map_factory.get_map import get_local_dted
+from utility.utility import to_utm, get_dots_in_line, get_v_factor
+from environments.transmitter import transmitters
 
 DeogyuTransmitter = transmitters[1]
 ChiakTransmitter = transmitters[2]
@@ -52,10 +52,13 @@ def minus_midheight_case():
     ax2.tick_params(axis='y', labelcolor=color)
 
     fig.tight_layout()  # otherwise the right y-label is slightly clipped
+    fig.set_size_inches(18, 9, forward=True)
     plt.title(f"Chiak to another mountain when midheight is under -200m")
-    txt=f"Transmitter - lat : [{t_lat}], lon : [{t_lon}]\nReceiver - lat {dted_data['grid_lat'][78]}: , lon : {dted_data['grid_lon'][114]}"
+    txt=f"Transmitter - lat : [{t_lat}], lon : [{t_lon}]\nReceiver - lat {dted_data['grid_lat'][78]}, lon : {dted_data['grid_lon'][114]}"
     plt.figtext(0.5, 0.01, txt, wrap=True, horizontalalignment='center', fontsize=12)
-    plt.show()
+    plt.savefig(f"main/IMGS/COS/under-200_midheight_{name}.png")
+    print(f"under-200_midheight_{name}.png CREATED")
+    plt.clf()
 
 
 def minus_height_of_max_v_case():
@@ -107,10 +110,13 @@ def minus_height_of_max_v_case():
     ax2.tick_params(axis='y', labelcolor=color)
 
     fig.tight_layout()  # otherwise the right y-label is slightly clipped
-    txt=f"Transmitter - lat : [{t_lat}], lon : [{t_lon}]\nReceiver - lat {dted_data['grid_lat'][12]}: , lon : {dted_data['grid_lon'][115]}"
+    fig.set_size_inches(18, 9, forward=True)
+    txt=f"Transmitter - lat : [{t_lat}], lon : [{t_lon}]\nReceiver - lat {dted_data['grid_lat'][12]}, lon : {dted_data['grid_lon'][115]}"
     plt.figtext(0.5, 0.01, txt, wrap=True, horizontalalignment='center', fontsize=12)
     plt.title(f"Deogyu to another mountain when height of max_v is under -200m")
-    plt.show()
+    plt.savefig(f"main/IMGS/COS/under-200_height_of_max_v_{name}.png")
+    print(f"under-200_height_of_max_v_{name}.png CREATED")
+    plt.clf()
 
-
+minus_midheight_case()
 minus_height_of_max_v_case()

@@ -1,10 +1,7 @@
-import numpy as np
-import pandas as pd
 import matplotlib.pyplot as plt
-import matplotlib.patches as patches
-from ..map_factory import get_distance_map, get_difference_map, get_slope_map
-from ..transmitter import transmitters
-from ..utility import to_utm
+from map_factory.map_factory import get_distance_map, get_difference_map, get_slope_map
+from environments.transmitter import transmitters
+from utility.utility import to_utm
 # 대전의 위도 : 36.3504° N
 # 대전의 경도 : 127.3845° E
 
@@ -22,8 +19,10 @@ def plot_distance_from_transmitter(transmitter):
     plt.title(f"Distance From {name}")
     cbar = plt.colorbar(fig)
     cbar.set_label('Distance, m')
-
-    plt.show()
+    
+    plt.savefig(f"main/IMGS/DISTANCE/{name}.png")
+    print(f"{name}.png CREATED")
+    plt.clf()
 
 
 def plot_difference_from_transmitter(transmitter):
@@ -39,8 +38,10 @@ def plot_difference_from_transmitter(transmitter):
     plt.title(f"Distance Difference From {name}")
     cbar = plt.colorbar(fig)
     cbar.set_label('Diffrence, m')
-
-    plt.show()
+    
+    plt.savefig(f"main/IMGS/DISTANCE/difference_{name}.png")
+    print(f"difference_{name}.png CREATED")
+    plt.clf()
 
 
 def plot_slope_from_transmitter(transmitter):
@@ -57,7 +58,9 @@ def plot_slope_from_transmitter(transmitter):
     cbar = plt.colorbar(fig)
     cbar.set_label('Slope, degree')
 
-    plt.show()
+    plt.savefig(f"main/IMGS/DISTANCE/slope_{name}.png")
+    print(f"slope_{name}.png CREATED")
+    plt.clf()
 
 
 for transmitter in transmitters:

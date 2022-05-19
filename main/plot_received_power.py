@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
-from ..map_factory import get_received_power_map
-from ..transmitter import transmitters
-from ..utility import convert_to_si
+from map_factory.map_factory import get_received_power_map
+from environments.transmitter import transmitters
+from utility.utility import convert_to_si
 
 frequenct_list = [1000000, 10000000, 100000000, 1000000000]
 r_h = 10
@@ -20,7 +20,7 @@ def plot_received_power_near_transmitter(frequency, transmitter):
     plt.title(f"Received Power near {name} ({convert_to_si(frequency)}Hz)")
     cbar = plt.colorbar(fig)
     cbar.set_label('Received Power (dBm)')
-    plt.savefig(f"ReceivedPowerImgs/{name}_{convert_to_si(frequency)}Hz.png")
+    plt.savefig(f"main/IMGS/RP/{name}_{convert_to_si(frequency)}Hz.png")
     print(f"{name}_{convert_to_si(frequency)}Hz.png CREATED")
     plt.clf()
 
