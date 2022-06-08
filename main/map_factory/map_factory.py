@@ -1,9 +1,9 @@
 import numpy as np
 import pandas as pd
 from math import sqrt, atan, log10
-from map_factory.utility.utility import get_v_factor, to_utm, get_index, get_mid_height, get_received_power, get_max_v
-from map_factory.utility.model import model, scaler
-from map_factory.get_map import get_korea_dted, get_local_dted, get_height
+from main.map_factory.utility.utility import get_v_factor, to_utm, get_index, get_mid_height, get_received_power_using_raw_data, get_max_v, get_received_power, get_observer_predicted_power,get_info_about_observer_predicted_power
+from main.map_factory.utility.model import model, scaler
+from main.map_factory.get_map import get_korea_dted, get_local_dted, get_height
 
 
 def get_height_map(t_lon, t_lat):
@@ -146,7 +146,29 @@ def get_v_by_mid_height_map(f, t_h=10, r_h=10, t_lon=127.3845, t_lat=36.3504, sp
         dted_data["grid_lon"], dted_data["grid_lat"])   # lon & lat tiles
     return {"X": LON, "Y": LAT, "V": V_all}
 
-def get_max_v_map(f, t_h=10, r_h=10, t_lon=127.3845, t_lat=36.3504, span_lon=1.0, span_lat=1.0):
+def get_experimented_v_map(f, t_h=10, r_h=10, t_lon=127.3845, t_lat=36.3504, span_lon=1.0, span_lat=1.0):
+    dted_data = get_local_dted(t_lon, t_lat, span_lon, span_lat)
+    t_ix, t_iy = get_index(dted_data, t_lon, t_lat)
+
+    # MATRIX OF (d, (h,d1,d2)) TUPLE.
+    # (h,d1,d2) would be nan in case of LOS
+    V_all = []
+    for y in range(len(dted_data["grid_lat"])):
+        V_row = []
+        for x in range(len(dted_data["grid_lon"])):
+            MH = get_mid_height(dted_data, t_ix, t_iy, t_h, x, y, r_h)
+            try:
+                V = get_v_factor(MH[1][0], f, MH[1][1], MH[1][2])
+                V_row.append(V)
+            except TypeError:
+                V_row.append(np.nan)
+        V_all.append(V_row)
+    LON, LAT = np.meshgrid(
+        dted_data["grid_lon"], dted_data["grid_lat"])   # lon & lat tiles
+    return {"X": LON, "Y": LAT, "V": V_all}
+
+
+def get_v_map(f, t_h=10, r_h=10, t_lon=127.3845, t_lat=36.3504, span_lon=1.0, span_lat=1.0):
     dted_data = get_local_dted(t_lon, t_lat, span_lon, span_lat)
     t_ix, t_iy = get_index(dted_data, t_lon, t_lat)
 
@@ -173,12 +195,10 @@ def get_received_power_map(f, t_h=10, r_h=10, t_lon=127.3845, t_lat=36.3504, spa
 
     # MATRIX OF (d, (h,d1,d2)) TUPLE. MidHeight would be none if there is no midheight
     RP_all = []
-    for i in range(len(dted_data["grid_lat"])):
+    for y in range(len(dted_data["grid_lat"])):
         RP_row = []
-        for j in range(len(dted_data["grid_lon"])):
-            V = get_max_v(dted_data, f, t_ix, t_iy, t_h, j, i, r_h)
-            RP = get_received_power(
-                f, V["d1"]+V["d2"], V["h"], V["d1"], V["d2"])
+        for x in range(len(dted_data["grid_lon"])):
+            RP = get_received_power(dted_data,f,t_ix,t_iy,t_h,x,y,r_h)
             RP_row.append(RP)
         RP_all.append(RP_row)
     LON, LAT = np.meshgrid(
@@ -197,7 +217,7 @@ def get_received_power_by_mid_height_map(f, t_h=10, r_h=10, t_lon=127.3845, t_la
         for j in range(len(dted_data["grid_lon"])):
             MH = get_mid_height(dted_data, t_ix, t_iy, t_h, j, i, r_h)
             try:
-                RP = get_received_power(f, MH[1][1] + MH[1][2], MH[1][0], MH[1][1], MH[1][2])
+                RP = get_received_power_using_raw_data(f, MH[1][1] + MH[1][2], MH[1][0], MH[1][1], MH[1][2])
                 RP_row.append(RP)
             except TypeError:
                 RP_row.append(np.nan)
@@ -206,31 +226,51 @@ def get_received_power_by_mid_height_map(f, t_h=10, r_h=10, t_lon=127.3845, t_la
         dted_data["grid_lon"], dted_data["grid_lat"])   # lon & lat tiles
     return {"X": LON, "Y": LAT, "RP": RP_all}
 
+
+def get_observer_predicted_power_map(f, t_h=10, r_h=10, t_lon=127.3845, t_lat=36.3504, span_lon=1.0, span_lat=1.0):
+    dted_data = get_local_dted(t_lon, t_lat, span_lon, span_lat)
+    t_ix, t_iy = get_index(dted_data, t_lon, t_lat)
+
+    # MATRIX OF (d, (h,d1,d2)) TUPLE. MidHeight would be none if there is no midheight
+    RP_all = []
+    for y in range(len(dted_data["grid_lat"])):
+        RP_row = []
+        for x in range(len(dted_data["grid_lon"])):
+            RP = get_observer_predicted_power(dted_data,f,t_ix,t_iy,t_h,x,y,r_h)
+            RP_row.append(RP)
+        RP_all.append(RP_row)
+    LON, LAT = np.meshgrid(
+        dted_data["grid_lon"], dted_data["grid_lat"])   # lon & lat tiles
+    return {"X": LON, "Y": LAT, "RP": RP_all}
+
+
+
+
 def get_csv_map(f, t_h=10, r_h=10, t_lon=127.3845, t_lat=36.3504, span_lon=1.0, span_lat=1.0):
     dted_data = get_local_dted(t_lon, t_lat, span_lon, span_lat)
     t_ix, t_iy = get_index(dted_data, t_lon, t_lat)
 
     RP_all = []
+    R_all = []
+    D_all = []
     H_all = []
-    for i in range(len(dted_data["grid_lat"])):
+    for y in range(len(dted_data["grid_lat"])):
         RP_row = []
+        R_row = []
+        D_row = []
         H_row = []
-        for j in range(len(dted_data["grid_lon"])):
-            V = get_max_v(dted_data, f, t_ix, t_iy, t_h, j, i, r_h)
-            H = get_mid_height(dted_data, t_ix, t_iy, t_h, j, i, r_h)
-            try:
-                H_row.append(H[1][0])
-            except TypeError:
-                H_row.append(np.nan)
-            RP = get_received_power(
-                f, V["d1"]+V["d2"], V["h"], V["d1"], V["d2"])
+        for x in range(len(dted_data["grid_lon"])):
+            RP = get_received_power(dted_data,f,t_ix,t_iy,t_h,x,y,r_h)
+            INFO = get_info_about_observer_predicted_power(dted_data, t_ix, t_iy, t_h, x, y, r_h)
             RP_row.append(RP)
-
+            R_row.append(INFO['R'])
+            D_row.append(INFO['D'])
+            H_row.append(INFO['H'])
         RP_all.append(RP_row)
+        R_all.append(R_row)
+        D_all.append(D_row)
         H_all.append(H_row)
-    LON, LAT = np.meshgrid(
-        dted_data["grid_lon"], dted_data["grid_lat"])   # lon & lat tiles
-    return {"X": LON, "Y": LAT, "RP": RP_all, "H": H_all}
+    return {"RP": RP_all, "R": R_all, "D": D_all, "H": H_all}
 
 
 def get_predicted_power_map(f, t_h=10, r_h=10, t_lon=127.3845, t_lat=36.3504, span_lon=1.0, span_lat=1.0):

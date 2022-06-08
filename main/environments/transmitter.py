@@ -12,11 +12,14 @@ class Transmitter():
 
 
 transmitters = [
-    Transmitter("DaeJeon", 127.3845, 36.3504),  # 대잔광역시청
-    Transmitter("Deogyu Mountain", 127.7475, 35.8589),  # 덕유산 국립공원 향적봉
-    Transmitter("Chiak Mountain", 128.0536, 37.3661),  # 치악산 비루봉
-    Transmitter("Daedun Mountain", 127.3219, 36.125),  # 대둔산 마천대
+    Transmitter("SikJang", 127.4908, 36.3281), #MBC
+    Transmitter("NamSan", 126.9892, 37.5522), #MBC
+    Transmitter("MiReuk", 127.0411,  36.0317), #GUKAK
+    Transmitter("MuDeung", 127.0033, 35.1283), #MBC
 ]
+
+gist_transmitter = Transmitter("GIST", 126.8397, 35.2283)
+
 
 
 print("-----------------TRANSMITTER LISTS-----------------")

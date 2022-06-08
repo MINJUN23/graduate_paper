@@ -6,8 +6,8 @@ Loads DTED level 0 data and plot near Daejeon
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
-from map_factory.get_map import get_korea_dted, get_local_dted
-from environments.transmitter import transmitters
+from map_factory.map_factory import get_korea_dted, get_local_dted
+from environments.transmitter import transmitters, gist_transmitter
 
 
 def plot_korea(t_lon=127.3845, t_lat=36.3504, span_lon=1.0, span_lat=1.0):
@@ -52,7 +52,6 @@ def plot_surround_of_transmitter(transmitter):
     plt.savefig(f"main/IMGS/MAP/{name}.png")
     print(f"{name}.png CREATED")
     plt.clf()
-
 
 for transmitter in transmitters:
     plot_surround_of_transmitter(transmitter)

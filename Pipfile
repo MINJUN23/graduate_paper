@@ -11,6 +11,8 @@ pyproj = "*"
 mplcursors = "*"
 tensorflow = "*"
 sklearn = "*"
+h5py = "*"
+tensorflow-macos = "*"
 
 [dev-packages]
 ipykernel = "*"

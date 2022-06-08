@@ -1,12 +1,12 @@
 from re import L
 import unittest
 from utility import *
-from get_map import get_korea_dted, get_local_dted
+# from get_map import get_korea_dted, get_local_dted
 
-dted_data = get_korea_dted()
+# dted_data = get_korea_dted()
 t_lon, t_lat = 127.3845, 36.3504
 span_lon, span_lat = 2.0, 2.0
-local_dted_data = get_local_dted(t_lon, t_lat, span_lon, span_lat)
+# local_dted_data = get_local_dted(t_lon, t_lat, span_lon, span_lat)
 
 
 class TestUtility(unittest.TestCase):
@@ -37,28 +37,22 @@ class TestUtility(unittest.TestCase):
     def test_get_dots_in_line(self):
         t_ix, t_iy, r_ix, r_iy = 0, 0, 3, 4
         dots = get_dots_in_line(t_ix, t_iy, r_ix, r_iy)
-        self.assertTrue(set(dots) == set(
-            [(0, 1), (1, 1), (1, 2), (2, 2), (2, 3), (3, 3)]))
+        self.assertTrue(dots == [(0,0),(0, 1), (1, 1), (1, 2), (2, 2), (2, 3), (3, 3),(3,4)])
         t_ix, t_iy, r_ix, r_iy = 0, 0, -3, -4
         dots = get_dots_in_line(t_ix, t_iy, r_ix, r_iy)
-        self.assertTrue(set(dots) == set(
-            [(0, -1), (-1, -1), (-1, -2), (-2, -2), (-2, -3), (-3, -3)]))
+        self.assertTrue(dots == [(0,0), (0, -1), (-1, -1), (-1, -2), (-2, -2), (-2, -3), (-3, -3), (-3,-4)])
         t_ix, t_iy, r_ix, r_iy = 0, 0, -3, 4
         dots = get_dots_in_line(t_ix, t_iy, r_ix, r_iy)
-        self.assertTrue(set(dots) == set(
-            [(0, 1), (-1, 1), (-1, 2), (-2, 2), (-2, 3), (-3, 3)]))
+        self.assertTrue(dots == [(0,0), (0, 1), (-1, 1), (-1, 2), (-2, 2), (-2, 3), (-3, 3), (-3,4)])
         t_ix, t_iy, r_ix, r_iy = 0, 0, 3, -4
         dots = get_dots_in_line(t_ix, t_iy, r_ix, r_iy)
-        self.assertTrue(set(dots) == set(
-            [(0, -1), (1, -1), (1, -2), (2, -2), (2, -3), (3, -3)]))
+        self.assertTrue(dots == [(0,0), (0, -1), (1, -1), (1, -2), (2, -2), (2, -3), (3, -3), (3,-4)])
         t_ix, t_iy, r_ix, r_iy = 0, 0, 0, 4
         dots = get_dots_in_line(t_ix, t_iy, r_ix, r_iy)
-        self.assertTrue(set(dots) == set(
-            [(0, 1), (0, 2), (0, 3)]))
+        self.assertTrue(dots == [(0,0), (0, 1), (0, 2), (0, 3), (0,4)])
         t_ix, t_iy, r_ix, r_iy = 0, 0, 0, -4
         dots = get_dots_in_line(t_ix, t_iy, r_ix, r_iy)
-        self.assertTrue(set(dots) == set(
-            [(0, -1), (0, -2), (0, -3)]))
+        self.assertTrue(dots == [(0,0), (0, -1), (0, -2), (0, -3), (0,-4)])
 
     def test_get_mid_height(self):
         r_lon, r_lat = 127.825, 35.63

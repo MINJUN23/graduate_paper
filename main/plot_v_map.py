@@ -3,7 +3,7 @@ import numpy as np
 import pandas as pd
 from map_factory.map_factory import get_max_v_map, get_mid_height_map, get_v_by_mid_height_map
 from map_factory.utility.utility import convert_to_si
-from environments.transmitter import transmitters
+from environments.transmitter import transmitters, gist_transmitter
 
 
 r_h = 10
@@ -170,5 +170,5 @@ def plot_max_v_and_v_by_max_midheight(transmitter):
     print(f"V_DIFFERENCE_{name}_{convert_to_si(frequency)}Hz.png CREATED")
     plt.clf()
 
-for transmitter in transmitters:
-    plot_max_v_and_v_by_max_midheight(transmitter)
+
+plot_max_v_and_v_by_max_midheight(gist_transmitter)

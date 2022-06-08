@@ -8,23 +8,17 @@ from main.map_factory.map_factory import get_csv_map
 from main.map_factory.utility.utility import get_index, convert_to_si
 from main.environments.transmitter import transmitters
 
-frequency_list = [1000000, 5000000, 10000000, 50000000,
-                  100000000, 500000000, 1000000000, 5000000000]
+frequency_list = list(range(80000000,100000001,5000000))
 to_utm = Proj(proj='utm', zone=52, ellps='WGS84', preserve_units=False)
 r_h = 10
 
 
 def create_CSV():
     df = pd.DataFrame(
-        {"DX": [], "DY": [], "DZ": [],
-         "H": [], "log_f": [], "RP": []})
+        {"R": [], "D": [], "H": [], "RP": []})
     for transmitter in transmitters:
         name, t_lon, t_lat, span_lon, span_lat, t_h = transmitter()
         dted_data = get_local_dted(t_lon, t_lat, span_lon, span_lat)
-        t_ix, t_iy = get_index(dted_data, t_lon, t_lat)
-
-        TX, TY = to_utm(t_lon, t_lat)
-        TZ = dted_data["grid_height"][t_iy][t_ix] + t_h
         # MATRIX OF (r, (h,d1,d2)) TUPLE. MidHeight would be none if there is no midheight
         for f in frequency_list:
             DATA = get_csv_map(
@@ -32,24 +26,17 @@ def create_CSV():
             for i in range(len(DATA["RP"])):  # LAT_index
                 for j in range(len(DATA["RP"][0])):  # LON_index
                     if not np.isnan(DATA["RP"][i][j]) and not np.isnan(DATA["H"][i][j]):
-                        RX, RY = to_utm(
-                            DATA["X"][i][j], DATA["Y"][i][j])
-                        RZ = dted_data["grid_height"][i][j] + r_h
-                        DX = RX-TX
-                        DY = RY-TY
-                        DZ = RZ-TZ
+                        R = DATA["R"][i][j]
+                        D = DATA["D"][i][j]
                         H = DATA["H"][i][j]
                         RP = DATA["RP"][i][j]
-
-                        assert type(H) is float
-                        assert type(RP) is float
                         
                         dfNew = pd.DataFrame(
-                            {"DX": [DX], "DY": [DY], "DZ": [DZ],
-                             "H": [H], "log_f": [log10(f)], "RP": [RP]})
+                            {"R": [R], "D": [D],"H": [H], "RP": [RP]})
                         df = pd.concat([df, dfNew])
             print(
                 f"Processing {name} Transmitter For Ray {convert_to_si(f)}Hz Finish")
+            # df.to_csv("MLP/DATA/data.csv")
     df_shuffled = df.sample(frac=1).reset_index(drop=True)
     print("CSV DATA IS CREATED")
     df_shuffled.to_csv("MLP/DATA/data.csv")

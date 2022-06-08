@@ -1,11 +1,11 @@
 import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
-from map_factory.map_factory import get_received_power_map, get_predicted_power_map, get_received_power_by_mid_height_map
-from environments.transmitter import transmitters
+from map_factory.map_factory import get_received_power_map, get_predicted_power_map, get_received_power_by_mid_height_map, get_observer_predicted_power_map
+from environments.transmitter import transmitters, gist_transmitter
 from map_factory.utility.utility import convert_to_si
 
-frequenct_list = [1000000, 10000000, 100000000, 1000000000]
+frequency_list = [80000000, 85000000,90000000,95000000,100000000]
 r_h = 10
 
 
@@ -22,7 +22,7 @@ def plot_received_power_near_transmitter(frequency, transmitter):
     plt.title(f"Received Power near {name} ({convert_to_si(frequency)}Hz)")
     cbar = plt.colorbar(fig)
     cbar.set_label('Received Power (dBm)')
-    plt.savefig(f"main/IMGS/RP/{name}_{convert_to_si(frequency)}Hz.png")
+    plt.savefig(f"main/IMGS/RP/RP_{name}_{convert_to_si(frequency)}Hz.png")
     print(f"{name}_{convert_to_si(frequency)}Hz.png CREATED")
     plt.clf()
 
@@ -41,6 +41,23 @@ def plot_expected_received_power_near_transmitter(frequency, transmitter):
     cbar = plt.colorbar(fig)
     cbar.set_label('Received Power (dBm)')
     plt.savefig(f"main/IMGS/RP/CAL_{name}_{convert_to_si(frequency)}Hz.png")
+    print(f"CAL_{name}_{convert_to_si(frequency)}Hz.png CREATED")
+    plt.clf()
+
+def plot_observer_prediected_power_near_transmitter(frequency, transmitter):
+    name, t_lon, t_lat, span_lon, span_lat, t_h = transmitter()
+    DATA = get_observer_predicted_power_map(
+        frequency, t_h, r_h, t_lon, t_lat, span_lon, span_lat)
+    fig = plt.pcolormesh(
+        DATA["X"], DATA["Y"], DATA["RP"], shading="auto")
+    fig.axes.set_aspect("equal")
+    plt.plot(t_lon, t_lat, "ro", markersize=2)
+    plt.xlabel("LAT, (degree)")
+    plt.ylabel("LON, (degree)")
+    plt.title(f"Predicted Power By Observer near {name} ({convert_to_si(frequency)}Hz)")
+    cbar = plt.colorbar(fig)
+    cbar.set_label('Received Power (dBm)')
+    plt.savefig(f"main/IMGS/RP/PPB_{name}_{convert_to_si(frequency)}Hz.png")
     print(f"CAL_{name}_{convert_to_si(frequency)}Hz.png CREATED")
     plt.clf()
 
@@ -117,6 +134,47 @@ def plot_differences(frequency, transmitter):
     plt.clf()
 
 
-for transmitter in transmitters:
-    for frequency in frequenct_list:
-        plot_differences(frequency, transmitter)
+
+def plot_received_and_observer_predicted(frequency, transmitter):
+    name, t_lon, t_lat, span_lon, span_lat, t_h = transmitter()
+    RP = get_received_power_map(
+        frequency, t_h, r_h, t_lon, t_lat, span_lon, span_lat)
+    OP = get_observer_predicted_power_map(
+        frequency, t_h, r_h, t_lon, t_lat, span_lon, span_lat)
+    RP_DATA = pd.DataFrame(RP["RP"])
+    OP_DATA = pd.DataFrame(OP["RP"])
+    v_min = min([np.nanmin(RP_DATA), np.nanmin(OP_DATA)])
+    v_max = max([np.nanmax(RP_DATA), np.nanmax(OP_DATA)])
+    
+    fig = plt.pcolormesh(
+        RP["X"], RP["Y"], RP["RP"], shading="auto")
+    fig.axes.set_aspect("equal")
+    plt.plot(t_lon, t_lat, "ro", markersize=2)
+    plt.xlabel("LAT, (degree)")
+    plt.ylabel("LON, (degree)")
+    plt.title(f"Received Power near {name} ({convert_to_si(frequency)}Hz)")
+    cbar = plt.colorbar(fig)
+    plt.clim(v_min, v_max)
+    cbar.set_label('Received Power (dBm)')
+    plt.savefig(f"main/IMGS/RP/RP_{name}_{convert_to_si(frequency)}Hz.png")
+    print(f"{name}_{convert_to_si(frequency)}Hz.png CREATED")
+    plt.clf()
+
+    fig = plt.pcolormesh(
+        OP["X"], OP["Y"], OP["RP"], shading="auto")
+    fig.axes.set_aspect("equal")
+    plt.plot(t_lon, t_lat, "ro", markersize=2)
+    plt.xlabel("LAT, (degree)")
+    plt.ylabel("LON, (degree)")
+    plt.title(f"Predicted Power By Observer near {name} ({convert_to_si(frequency)}Hz)")
+    cbar = plt.colorbar(fig)
+    plt.clim(v_min, v_max)
+    cbar.set_label('Received Power (dBm)')
+    plt.savefig(f"main/IMGS/RP/PPB_{name}_{convert_to_si(frequency)}Hz.png")
+    print(f"CAL_{name}_{convert_to_si(frequency)}Hz.png CREATED")
+    plt.clf()
+
+
+for frequency in frequency_list:
+    for transmiiter in transmitters:
+        plot_received_and_observer_predicted(frequency, transmiiter)
