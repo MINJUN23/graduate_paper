@@ -32,7 +32,7 @@ def create_CSV():
                         RP = DATA["RP"][i][j]
                         
                         dfNew = pd.DataFrame(
-                            {"R": [R], "D": [D],"H": [H], "RP": [RP]})
+                            {"R": [R], "D": [D],"H": [H], "F":[log10(f)],"RP": [RP]})
                         df = pd.concat([df, dfNew])
             print(
                 f"Processing {name} Transmitter For Ray {convert_to_si(f)}Hz Finish")

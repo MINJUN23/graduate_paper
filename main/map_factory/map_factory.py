@@ -1,9 +1,9 @@
 import numpy as np
 import pandas as pd
 from math import sqrt, atan, log10
-from main.map_factory.utility.utility import get_v_factor, to_utm, get_index, get_mid_height, get_received_power_using_raw_data, get_max_v, get_received_power, get_observer_predicted_power,get_info_about_observer_predicted_power
-from main.map_factory.utility.model import model, scaler
-from main.map_factory.get_map import get_korea_dted, get_local_dted, get_height
+from map_factory.utility.utility import get_v_factor, to_utm, get_index, get_mid_height, get_received_power_using_raw_data, get_max_v, get_received_power, get_observer_predicted_power,get_info_about_observer_predicted_power
+from map_factory.utility.model import model, scaler
+from map_factory.get_map import get_korea_dted, get_local_dted, get_height
 
 
 def get_height_map(t_lon, t_lat):
@@ -279,23 +279,18 @@ def get_predicted_power_map(f, t_h=10, r_h=10, t_lon=127.3845, t_lat=36.3504, sp
     t_x, t_y = to_utm(t_lon, t_lat)
     t_z = get_height(t_lon, t_lat)
     RP_all = []
-    for i in range(len(dted_data["grid_lat"])):
+    for y in range(len(dted_data["grid_lat"])):
         RP_row = []
-        for j in range(len(dted_data["grid_lon"])):
+        for x in range(len(dted_data["grid_lon"])):
             try:
-                x, y = to_utm(dted_data["grid_lon"][j],
-                              dted_data["grid_lat"][i])
-                z = dted_data["grid_height"][i][j]
-                DX = x - t_x
-                DY = y - t_y
-                DZ = z - t_z
-                H = get_mid_height(dted_data, t_ix, t_iy, t_h, j, i, r_h)[1][0]
-                # {"DX": [], "DY": [], "DZ": [], "H": [], "log_f": []
-                INPUT = pd.DataFrame([[DX[0], DY[0], DZ, H, log10(f)]], columns=["DX",'DY',"DZ","H","log_f"])
+                INFO = get_info_about_observer_predicted_power(dted_data, t_ix, t_iy, t_h, x, y, r_h)
+                # ,R,D,H,F
+                INPUT = pd.DataFrame([[INFO["R"], INFO["D"], INFO["H"],log10(f)]], columns=["R",'D',"H","F"])
                 INPUT = scaler.transform(INPUT)
                 RP = model.predict(INPUT)[0][0]
                 RP_row.append(RP)
-            except Exception:
+            except Exception as e:
+                print(e)
                 RP_row.append(np.nan)
         RP_all.append(RP_row)
     LON, LAT = np.meshgrid(

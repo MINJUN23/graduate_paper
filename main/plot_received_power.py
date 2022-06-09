@@ -85,7 +85,7 @@ def plot_differences(frequency, transmitter):
     name, t_lon, t_lat, span_lon, span_lat, t_h = transmitter()
     REAL = get_received_power_map(
         frequency, t_h, r_h, t_lon, t_lat, span_lon, span_lat)
-    CALC = get_received_power_by_mid_height_map(
+    CALC = get_observer_predicted_power_map(
         frequency, t_h, r_h, t_lon, t_lat, span_lon, span_lat)
     CALC_DIFFERENCE = pd.DataFrame(REAL["RP"]) - pd.DataFrame(CALC["RP"])
 
@@ -109,7 +109,7 @@ def plot_differences(frequency, transmitter):
     plt.clim(v_min, v_max)
     cbar.set_label('Received Power (dBm)')
     plt.savefig(
-        f"main/IMGS/RP/DIFF/CALC_{name}_{convert_to_si(frequency)}Hz_ERROR:{ERROR:.3f}.png")
+        f"main/IMGS/RP_DIFF/CALC_{name}_{convert_to_si(frequency)}Hz_ERROR:{ERROR:.3f}.png")
     print(f"DIFF_CALC_{name}_{convert_to_si(frequency)}Hz.png CREATED")
     print(f"ERROR: {ERROR:.3f}")
     plt.clf()
@@ -128,7 +128,7 @@ def plot_differences(frequency, transmitter):
     plt.clim(v_min, v_max)
     cbar.set_label('Received Power (dBm)')
     plt.savefig(
-        f"main/IMGS/RP/DIFF/PRED_{name}_{convert_to_si(frequency)}Hz_ERROR:{ERROR:.3f}.png")
+        f"main/IMGS/RP_DIFF/PRED_{name}_{convert_to_si(frequency)}Hz_ERROR:{ERROR:.3f}.png")
     print(f"DIFF_PRED_{name}_{convert_to_si(frequency)}Hz.png CREATED")
     print(f"ERROR: {ERROR:.3f}")
     plt.clf()
@@ -176,5 +176,10 @@ def plot_received_and_observer_predicted(frequency, transmitter):
 
 
 for frequency in frequency_list:
+    plot_predicted_power_near_transmitter(frequency,gist_transmitter)
+    plot_differences(frequency,gist_transmitter)
     for transmiiter in transmitters:
-        plot_received_and_observer_predicted(frequency, transmiiter)
+        plot_differences(frequency, transmiiter)
+        plot_predicted_power_near_transmitter(frequency,transmiiter)
+
+
