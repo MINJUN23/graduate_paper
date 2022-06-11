@@ -21,8 +21,18 @@ transmitters = [
 gist_transmitter = Transmitter("GIST", 126.8397, 35.2283)
 
 
+test_transmitters = [
+    Transmitter("ChungJu", 127.4997,  36.6430), #MBC
+    Transmitter("Daegu", 128.4408, 35.8333), #DASAN MBC
+]
 
-print("-----------------TRANSMITTER LISTS-----------------")
+
+
+print("-----------------TRAIN_TRANSMITTER LISTS-----------------")
 for transmitter in transmitters:
+    print(transmitter())
+print("---------------------------------------------------")
+print("-----------------TEST_TRANSMITTER LISTS------------------")
+for transmitter in test_transmitters:
     print(transmitter())
 print("---------------------------------------------------")

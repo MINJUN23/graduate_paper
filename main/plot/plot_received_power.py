@@ -2,10 +2,10 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
 from map_factory.map_factory import get_received_power_map, get_predicted_power_map, get_received_power_by_mid_height_map, get_observer_predicted_power_map
-from environments.transmitter import transmitters, gist_transmitter
+from environments.transmitter import transmitters, gist_transmitter, test_transmitters
 from map_factory.utility.utility import convert_to_si
 
-frequency_list = [80000000, 85000000,90000000,95000000,100000000]
+frequency_list = [80000000, 85000000, 90000000, 95000000, 100000000]
 r_h = 10
 
 
@@ -44,6 +44,7 @@ def plot_expected_received_power_near_transmitter(frequency, transmitter):
     print(f"CAL_{name}_{convert_to_si(frequency)}Hz.png CREATED")
     plt.clf()
 
+
 def plot_observer_prediected_power_near_transmitter(frequency, transmitter):
     name, t_lon, t_lat, span_lon, span_lat, t_h = transmitter()
     DATA = get_observer_predicted_power_map(
@@ -54,7 +55,8 @@ def plot_observer_prediected_power_near_transmitter(frequency, transmitter):
     plt.plot(t_lon, t_lat, "ro", markersize=2)
     plt.xlabel("LAT, (degree)")
     plt.ylabel("LON, (degree)")
-    plt.title(f"Predicted Power By Observer near {name} ({convert_to_si(frequency)}Hz)")
+    plt.title(
+        f"Predicted Power By Observer near {name} ({convert_to_si(frequency)}Hz)")
     cbar = plt.colorbar(fig)
     cbar.set_label('Received Power (dBm)')
     plt.savefig(f"main/IMGS/RP/PPB_{name}_{convert_to_si(frequency)}Hz.png")
@@ -133,6 +135,56 @@ def plot_differences(frequency, transmitter):
     print(f"ERROR: {ERROR:.3f}")
     plt.clf()
 
+def plot_abs_differences(frequency, transmitter):
+    name, t_lon, t_lat, span_lon, span_lat, t_h = transmitter()
+    REAL = get_received_power_map(
+        frequency, t_h, r_h, t_lon, t_lat, span_lon, span_lat)
+    CALC = get_observer_predicted_power_map(
+        frequency, t_h, r_h, t_lon, t_lat, span_lon, span_lat)
+    CALC_DIFFERENCE = pd.DataFrame(REAL["RP"]) - pd.DataFrame(CALC["RP"])
+    CALC_ERRORS = CALC_DIFFERENCE.abs()
+
+    PRED = get_predicted_power_map(
+        frequency, t_h, r_h, t_lon, t_lat, span_lon, span_lat)
+    PRED_DIFFERENCE = pd.DataFrame(REAL["RP"]) - pd.DataFrame(PRED["RP"])
+    PRED_ERRORS = PRED_DIFFERENCE.abs()
+
+    v_max = max([np.nanmax(PRED_ERRORS), np.nanmax(CALC_ERRORS)])
+
+    fig = plt.pcolormesh(
+        REAL["X"], REAL["Y"], CALC_ERRORS, shading="auto")
+    ERROR = CALC_ERRORS.stack().mean()
+    fig.axes.set_aspect("equal")
+    plt.plot(t_lon, t_lat, "ro", markersize=2)
+    plt.xlabel("LAT, (degree)")
+    plt.ylabel("LON, (degree)")
+    plt.title(f"CALC Difference")
+    cbar = plt.colorbar(fig)
+    plt.clim(0, v_max)
+    cbar.set_label('Received Power (dBm)')
+    plt.savefig(
+        f"main/IMGS/RP_ABS_DIFF/CALC_{name}_{convert_to_si(frequency)}Hz_ERROR:{ERROR:.3f}.png")
+    print(f"DIFF_CALC_{name}_{convert_to_si(frequency)}Hz.png CREATED")
+    print(f"ERROR: {ERROR:.3f}")
+    plt.clf()
+
+    fig = plt.pcolormesh(
+        REAL["X"], REAL["Y"], PRED_ERRORS, shading="auto")
+    ERROR = PRED_ERRORS.stack().mean()
+    fig.axes.set_aspect("equal")
+    plt.plot(t_lon, t_lat, "ro", markersize=2)
+    plt.xlabel("LAT, (degree)")
+    plt.ylabel("LON, (degree)")
+    plt.title(
+        f"PRED Difference")
+    cbar = plt.colorbar(fig)
+    plt.clim(0, v_max)
+    cbar.set_label('Received Power (dBm)')
+    plt.savefig(
+        f"main/IMGS/RP_ABS_DIFF/PRED_{name}_{convert_to_si(frequency)}Hz_ERROR:{ERROR:.3f}.png")
+    print(f"DIFF_PRED_{name}_{convert_to_si(frequency)}Hz.png CREATED")
+    print(f"ERROR: {ERROR:.3f}")
+    plt.clf()
 
 
 def plot_received_and_observer_predicted(frequency, transmitter):
@@ -145,7 +197,7 @@ def plot_received_and_observer_predicted(frequency, transmitter):
     OP_DATA = pd.DataFrame(OP["RP"])
     v_min = min([np.nanmin(RP_DATA), np.nanmin(OP_DATA)])
     v_max = max([np.nanmax(RP_DATA), np.nanmax(OP_DATA)])
-    
+
     fig = plt.pcolormesh(
         RP["X"], RP["Y"], RP["RP"], shading="auto")
     fig.axes.set_aspect("equal")
@@ -166,7 +218,8 @@ def plot_received_and_observer_predicted(frequency, transmitter):
     plt.plot(t_lon, t_lat, "ro", markersize=2)
     plt.xlabel("LAT, (degree)")
     plt.ylabel("LON, (degree)")
-    plt.title(f"Predicted Power By Observer near {name} ({convert_to_si(frequency)}Hz)")
+    plt.title(
+        f"Predicted Power By Observer near {name} ({convert_to_si(frequency)}Hz)")
     cbar = plt.colorbar(fig)
     plt.clim(v_min, v_max)
     cbar.set_label('Received Power (dBm)')
@@ -176,10 +229,5 @@ def plot_received_and_observer_predicted(frequency, transmitter):
 
 
 for frequency in frequency_list:
-    plot_predicted_power_near_transmitter(frequency,gist_transmitter)
-    plot_differences(frequency,gist_transmitter)
-    for transmiiter in transmitters:
-        plot_differences(frequency, transmiiter)
-        plot_predicted_power_near_transmitter(frequency,transmiiter)
-
-
+    for transmitter in transmitters:
+        plot_abs_differences(frequency, transmitter)

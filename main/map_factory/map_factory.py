@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 from math import sqrt, atan, log10
-from map_factory.utility.utility import get_v_factor, to_utm, get_index, get_mid_height, get_received_power_using_raw_data, get_max_v, get_received_power, get_observer_predicted_power,get_info_about_observer_predicted_power
+from map_factory.utility.utility import get_v_factor, to_utm, get_index, get_mid_height, get_received_power_using_raw_data, get_max_v, get_received_power, get_observer_predicted_power, get_info_about_observer_predicted_power
 from map_factory.utility.model import model, scaler
 from map_factory.get_map import get_korea_dted, get_local_dted, get_height
 
@@ -125,6 +125,7 @@ def get_mid_height_map(t_h=10, r_h=10, t_lon=127.3845, t_lat=36.3504, span_lon=1
         dted_data["grid_lon"], dted_data["grid_lat"])   # lon & lat tiles
     return {"X": LON, "Y": LAT, "H": MH_all}
 
+
 def get_v_by_mid_height_map(f, t_h=10, r_h=10, t_lon=127.3845, t_lat=36.3504, span_lon=1.0, span_lat=1.0):
     dted_data = get_local_dted(t_lon, t_lat, span_lon, span_lat)
     t_ix, t_iy = get_index(dted_data, t_lon, t_lat)
@@ -145,6 +146,7 @@ def get_v_by_mid_height_map(f, t_h=10, r_h=10, t_lon=127.3845, t_lat=36.3504, sp
     LON, LAT = np.meshgrid(
         dted_data["grid_lon"], dted_data["grid_lat"])   # lon & lat tiles
     return {"X": LON, "Y": LAT, "V": V_all}
+
 
 def get_experimented_v_map(f, t_h=10, r_h=10, t_lon=127.3845, t_lat=36.3504, span_lon=1.0, span_lat=1.0):
     dted_data = get_local_dted(t_lon, t_lat, span_lon, span_lat)
@@ -198,7 +200,7 @@ def get_received_power_map(f, t_h=10, r_h=10, t_lon=127.3845, t_lat=36.3504, spa
     for y in range(len(dted_data["grid_lat"])):
         RP_row = []
         for x in range(len(dted_data["grid_lon"])):
-            RP = get_received_power(dted_data,f,t_ix,t_iy,t_h,x,y,r_h)
+            RP = get_received_power(dted_data, f, t_ix, t_iy, t_h, x, y, r_h)
             RP_row.append(RP)
         RP_all.append(RP_row)
     LON, LAT = np.meshgrid(
@@ -217,7 +219,8 @@ def get_received_power_by_mid_height_map(f, t_h=10, r_h=10, t_lon=127.3845, t_la
         for j in range(len(dted_data["grid_lon"])):
             MH = get_mid_height(dted_data, t_ix, t_iy, t_h, j, i, r_h)
             try:
-                RP = get_received_power_using_raw_data(f, MH[1][1] + MH[1][2], MH[1][0], MH[1][1], MH[1][2])
+                RP = get_received_power_using_raw_data(
+                    f, MH[1][1] + MH[1][2], MH[1][0], MH[1][1], MH[1][2])
                 RP_row.append(RP)
             except TypeError:
                 RP_row.append(np.nan)
@@ -236,14 +239,13 @@ def get_observer_predicted_power_map(f, t_h=10, r_h=10, t_lon=127.3845, t_lat=36
     for y in range(len(dted_data["grid_lat"])):
         RP_row = []
         for x in range(len(dted_data["grid_lon"])):
-            RP = get_observer_predicted_power(dted_data,f,t_ix,t_iy,t_h,x,y,r_h)
+            RP = get_observer_predicted_power(
+                dted_data, f, t_ix, t_iy, t_h, x, y, r_h)
             RP_row.append(RP)
         RP_all.append(RP_row)
     LON, LAT = np.meshgrid(
         dted_data["grid_lon"], dted_data["grid_lat"])   # lon & lat tiles
     return {"X": LON, "Y": LAT, "RP": RP_all}
-
-
 
 
 def get_csv_map(f, t_h=10, r_h=10, t_lon=127.3845, t_lat=36.3504, span_lon=1.0, span_lat=1.0):
@@ -260,8 +262,9 @@ def get_csv_map(f, t_h=10, r_h=10, t_lon=127.3845, t_lat=36.3504, span_lon=1.0, 
         D_row = []
         H_row = []
         for x in range(len(dted_data["grid_lon"])):
-            RP = get_received_power(dted_data,f,t_ix,t_iy,t_h,x,y,r_h)
-            INFO = get_info_about_observer_predicted_power(dted_data, t_ix, t_iy, t_h, x, y, r_h)
+            RP = get_received_power(dted_data, f, t_ix, t_iy, t_h, x, y, r_h)
+            INFO = get_info_about_observer_predicted_power(
+                dted_data, t_ix, t_iy, t_h, x, y, r_h)
             RP_row.append(RP)
             R_row.append(INFO['R'])
             D_row.append(INFO['D'])
@@ -283,9 +286,11 @@ def get_predicted_power_map(f, t_h=10, r_h=10, t_lon=127.3845, t_lat=36.3504, sp
         RP_row = []
         for x in range(len(dted_data["grid_lon"])):
             try:
-                INFO = get_info_about_observer_predicted_power(dted_data, t_ix, t_iy, t_h, x, y, r_h)
+                INFO = get_info_about_observer_predicted_power(
+                    dted_data, t_ix, t_iy, t_h, x, y, r_h)
                 # ,R,D,H,F
-                INPUT = pd.DataFrame([[INFO["R"], INFO["D"], INFO["H"],log10(f)]], columns=["R",'D',"H","F"])
+                INPUT = pd.DataFrame([[INFO["R"], INFO["D"], INFO["H"], log10(f)]], columns=[
+                                     "R", 'D', "H", "F"])
                 INPUT = scaler.transform(INPUT)
                 RP = model.predict(INPUT)[0][0]
                 RP_row.append(RP)
