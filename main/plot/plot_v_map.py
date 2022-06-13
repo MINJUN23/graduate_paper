@@ -6,7 +6,7 @@ from map_factory.utility.utility import convert_to_si
 
 
 r_h = 10
-frequency = 1000000
+frequency = 90000000
 
 max_h = 1600
 min_h = -1000

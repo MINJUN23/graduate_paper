@@ -5,7 +5,6 @@ from map_factory.map_factory import get_received_power_map, get_predicted_power_
 from environments.transmitter import transmitters, gist_transmitter, test_transmitters
 from map_factory.utility.utility import convert_to_si
 
-frequency_list = [80000000, 85000000, 90000000, 95000000, 100000000]
 r_h = 10
 
 
@@ -226,8 +225,3 @@ def plot_received_and_observer_predicted(frequency, transmitter):
     plt.savefig(f"main/IMGS/RP/PPB_{name}_{convert_to_si(frequency)}Hz.png")
     print(f"CAL_{name}_{convert_to_si(frequency)}Hz.png CREATED")
     plt.clf()
-
-
-for frequency in frequency_list:
-    for transmitter in transmitters:
-        plot_abs_differences(frequency, transmitter)

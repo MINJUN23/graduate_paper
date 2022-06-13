@@ -3,10 +3,10 @@ from pyproj import Proj
 from math import log10
 import pandas as pd
 import numpy as np
-from main.map_factory.get_map import get_local_dted
-from main.map_factory.map_factory import get_csv_map
-from main.map_factory.utility.utility import get_index, convert_to_si
-from main.environments.transmitter import transmitters
+from map_factory.get_map import get_local_dted
+from map_factory.map_factory import get_csv_map
+from map_factory.utility.utility import convert_to_si
+from environments.transmitter import transmitters
 
 frequency_list = list(range(80000000,100000001,5000000))
 to_utm = Proj(proj='utm', zone=52, ellps='WGS84', preserve_units=False)
