@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 from math import sqrt, atan, log10
-from map_factory.utility.utility import get_v_factor, to_utm, get_index, get_mid_height, get_received_power_using_raw_data, get_max_v, get_received_power, get_observer_predicted_power, get_info_about_observer_predicted_power
+from map_factory.utility.utility import get_v_factor, to_utm, get_index, get_mid_height, get_received_power_using_raw_data, get_max_v, get_received_power, get_observer_predicted_power, get_info_about_observer_predicted_power, get_observer_predicted_v
 from map_factory.utility.model import model, scaler
 from map_factory.get_map import get_korea_dted, get_local_dted, get_height
 
@@ -246,6 +246,23 @@ def get_observer_predicted_power_map(f, t_h=10, r_h=10, t_lon=127.3845, t_lat=36
     LON, LAT = np.meshgrid(
         dted_data["grid_lon"], dted_data["grid_lat"])   # lon & lat tiles
     return {"X": LON, "Y": LAT, "RP": RP_all}
+
+def get_observer_predicted_v_map(f, t_h=10, r_h=10, t_lon=127.3845, t_lat=36.3504, span_lon=1.0, span_lat=1.0):
+    dted_data = get_local_dted(t_lon, t_lat, span_lon, span_lat)
+    t_ix, t_iy = get_index(dted_data, t_lon, t_lat)
+
+    # MATRIX OF (d, (h,d1,d2)) TUPLE. MidHeight would be none if there is no midheight
+    V_all = []
+    for y in range(len(dted_data["grid_lat"])):
+        V_row = []
+        for x in range(len(dted_data["grid_lon"])):
+            V = get_observer_predicted_v(
+                dted_data, f, t_ix, t_iy, t_h, x, y, r_h)
+            V_row.append(V)
+        V_all.append(V_row)
+    LON, LAT = np.meshgrid(
+        dted_data["grid_lon"], dted_data["grid_lat"])   # lon & lat tiles
+    return {"X": LON, "Y": LAT, "V": V_all}
 
 
 def get_csv_map(f, t_h=10, r_h=10, t_lon=127.3845, t_lat=36.3504, span_lon=1.0, span_lat=1.0):

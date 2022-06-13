@@ -12,10 +12,10 @@ class Transmitter():
 
 
 transmitters = [
-    Transmitter("SikJang", 127.4908, 36.3281), #MBC
-    Transmitter("NamSan", 126.9892, 37.5522), #MBC
     Transmitter("MiReuk", 127.0411,  36.0317), #GUKAK
     Transmitter("MuDeung", 127.0033, 35.1283), #MBC
+    Transmitter("SikJang", 127.4908, 36.3281), #MBC
+    Transmitter("NamSan", 126.9892, 37.5522), #MBC
 ]
 
 gist_transmitter = Transmitter("GIST", 126.8397, 35.2283)
