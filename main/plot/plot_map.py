@@ -52,6 +52,3 @@ def plot_surround_of_transmitter(transmitter):
     plt.savefig(f"main/IMGS/MAP/{name}.png")
     print(f"{name}.png CREATED")
     plt.clf()
-
-for transmitter in transmitters:
-    plot_surround_of_transmitter(transmitter)

@@ -225,3 +225,34 @@ def plot_received_and_observer_predicted(frequency, transmitter):
     plt.savefig(f"main/IMGS/RP/PPB_{name}_{convert_to_si(frequency)}Hz.png")
     print(f"CAL_{name}_{convert_to_si(frequency)}Hz.png CREATED")
     plt.clf()
+
+def plot_diffence_of_error(frequency, transmitter):
+    name, t_lon, t_lat, span_lon, span_lat, t_h = transmitter()
+    REAL = get_received_power_map(
+        frequency, t_h, r_h, t_lon, t_lat, span_lon, span_lat)
+    CALC = get_observer_predicted_power_map(
+        frequency, t_h, r_h, t_lon, t_lat, span_lon, span_lat)
+    CALC_DIFFERENCE = pd.DataFrame(REAL["RP"]) - pd.DataFrame(CALC["RP"])
+    CALC_ERRORS = CALC_DIFFERENCE.abs()
+
+    PRED = get_predicted_power_map(
+        frequency, t_h, r_h, t_lon, t_lat, span_lon, span_lat)
+    PRED_DIFFERENCE = pd.DataFrame(REAL["RP"]) - pd.DataFrame(PRED["RP"])
+    PRED_ERRORS = PRED_DIFFERENCE.abs()
+
+    ERROR_DIFFRENCE = PRED_ERRORS - CALC_ERRORS
+
+    fig = plt.pcolormesh(
+        REAL["X"], REAL["Y"], ERROR_DIFFRENCE, shading="auto", cmap='RdBu')
+    fig.axes.set_aspect("equal")
+    plt.plot(t_lon, t_lat, "ro", markersize=2)
+    plt.xlabel("LAT, (degree)")
+    plt.ylabel("LON, (degree)")
+    plt.title(f"PRED Error - CALC Error ({name} {convert_to_si(frequency)}Hz)")
+    cbar = plt.colorbar(fig)
+    plt.clim(-20, 20)
+    cbar.set_label('Received Power (dBm)')
+    plt.savefig(
+        f"main/IMGS/RP_ERROR_DIFF/{name}_{convert_to_si(frequency)}Hz.png")
+    print(f"RP_ERROR_DIFF_{name}_{convert_to_si(frequency)}Hz.png CREATED")
+    plt.clf()
