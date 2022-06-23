@@ -23,7 +23,7 @@ def plot_korea(t_lon=127.3845, t_lat=36.3504, span_lon=1.0, span_lat=1.0):
     plt.title("Elevation Map - Korea")
     cbar = plt.colorbar(fig)
     cbar.set_label('Height, m')
-    plt.savefig(f"main/IMGS/MAP/KOREA.png")
+    plt.savefig(f"simulation/IMGS/MAP/KOREA.png")
     print(f"KOREA.png CREATED")
     plt.clf()
 
@@ -43,6 +43,6 @@ def plot_surround_of_transmitter(transmitter):
     plt.title(f"Elevation Map - Near {name}")
     cbar = plt.colorbar(fig)
     cbar.set_label('Height, m')
-    plt.savefig(f"main/IMGS/MAP/{name}.png")
+    plt.savefig(f"simulation/IMGS/MAP/{name}.png")
     print(f"{name}.png CREATED")
     plt.clf()

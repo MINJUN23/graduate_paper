@@ -16,7 +16,7 @@ def plot_distance_from_transmitter(transmitter):
     cbar = plt.colorbar(fig)
     cbar.set_label('Distance, m')
     
-    plt.savefig(f"main/IMGS/DISTANCE/{name}.png")
+    plt.savefig(f"simulation/IMGS/DISTANCE/{name}.png")
     print(f"{name}.png CREATED")
     plt.clf()
 
@@ -35,6 +35,6 @@ def plot_slope_from_transmitter(transmitter):
     cbar = plt.colorbar(fig)
     cbar.set_label('Slope, degree')
 
-    plt.savefig(f"main/IMGS/DISTANCE/slope_{name}.png")
+    plt.savefig(f"simulation/IMGS/DISTANCE/slope_{name}.png")
     print(f"slope_{name}.png CREATED")
     plt.clf()

@@ -25,7 +25,7 @@ def plot_max_v_from_transmitter(transmitter):
     plt.title(f"Max value of v factor of the ray near {name}")
     cbar = plt.colorbar(fig)
     cbar.set_label('V - factor')
-    plt.savefig(f"main/IMGS/V_MAP/MAXV_{name}_{convert_to_si(frequency)}Hz.png")
+    plt.savefig(f"simulation/IMGS/V_MAP/MAXV_{name}_{convert_to_si(frequency)}Hz.png")
     print(f"MAXV_{name}_{convert_to_si(frequency)}Hz.png CREATED")
     plt.clf()
 
@@ -46,7 +46,7 @@ def plot_height_of_max_v_from_transmitter(transmitter):
     plt.clim(min_h, max_h)
     cbar.set_label('Height, m')
     plt.savefig(
-        f"main/IMGS/V_MAP/H_OF_MAXV_{name}_{convert_to_si(frequency)}Hz.png")
+        f"simulation/IMGS/V_MAP/H_OF_MAXV_{name}_{convert_to_si(frequency)}Hz.png")
     print(f"H_OF_MAXV_{name}_{convert_to_si(frequency)}Hz.png CREATED")
     plt.clf()
 
@@ -73,7 +73,7 @@ def plot_differnce_of_max_v_and_v_by_observer(transmitter):
     plt.clim(v_min, v_max)
     cbar.set_label('V-factor')
     plt.savefig(
-        f"main/IMGS/V_MAP/V_by_observer_{name}_{convert_to_si(frequency)}Hz.png")
+        f"simulation/IMGS/V_MAP/V_by_observer_{name}_{convert_to_si(frequency)}Hz.png")
     print(f"V_by_observer_{name}_{convert_to_si(frequency)}Hz.png CREATED")
     plt.clf()
 
@@ -89,7 +89,7 @@ def plot_differnce_of_max_v_and_v_by_observer(transmitter):
     plt.clim(v_min, v_max)
     cbar.set_label('V-factor')
     plt.savefig(
-        f"main/IMGS/V_MAP/MAXV_{name}_{convert_to_si(frequency)}Hz.png")
+        f"simulation/IMGS/V_MAP/MAXV_{name}_{convert_to_si(frequency)}Hz.png")
     print(f"MAXV_{name}_{convert_to_si(frequency)}Hz.png CREATED")
     plt.clf()
 
@@ -106,7 +106,7 @@ def plot_differnce_of_max_v_and_v_by_observer(transmitter):
     cbar = plt.colorbar(fig)
     cbar.set_label('V-factor')
     plt.savefig(
-        f"main/IMGS/V_MAP/V_DIFFERENCE_{name}_{convert_to_si(frequency)}Hz.png")
+        f"simulation/IMGS/V_MAP/V_DIFFERENCE_{name}_{convert_to_si(frequency)}Hz.png")
     print(f"V_DIFFERENCE_{name}_{convert_to_si(frequency)}Hz.png CREATED")
     plt.clf()
 

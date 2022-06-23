@@ -20,7 +20,7 @@ def plot_received_power_near_transmitter(frequency, transmitter):
     plt.title(f"Received Power near {name} ({convert_to_si(frequency)}Hz)")
     cbar = plt.colorbar(fig)
     cbar.set_label('Received Power (dBm)')
-    plt.savefig(f"main/IMGS/RP/RP_{name}_{convert_to_si(frequency)}Hz.png")
+    plt.savefig(f"simulation/IMGS/RP/RP_{name}_{convert_to_si(frequency)}Hz.png")
     print(f"{name}_{convert_to_si(frequency)}Hz.png CREATED")
     plt.clf()
 
@@ -39,7 +39,7 @@ def plot_observer_prediected_power_near_transmitter(frequency, transmitter):
         f"Predicted Power By Observer near {name} ({convert_to_si(frequency)}Hz)")
     cbar = plt.colorbar(fig)
     cbar.set_label('Received Power (dBm)')
-    plt.savefig(f"main/IMGS/RP/PPB_{name}_{convert_to_si(frequency)}Hz.png")
+    plt.savefig(f"simulation/IMGS/RP/PPB_{name}_{convert_to_si(frequency)}Hz.png")
     print(f"CAL_{name}_{convert_to_si(frequency)}Hz.png CREATED")
     plt.clf()
 
@@ -58,7 +58,7 @@ def plot_predicted_power_near_transmitter(frequency, transmitter):
         f"Predicted Received Power near {name} ({convert_to_si(frequency)}Hz)")
     cbar = plt.colorbar(fig)
     cbar.set_label('Received Power (dBm)')
-    plt.savefig(f"main/IMGS/RP/PRED_{name}_{convert_to_si(frequency)}Hz.png")
+    plt.savefig(f"simulation/IMGS/RP/PRED_{name}_{convert_to_si(frequency)}Hz.png")
     print(f"PRED_{name}_{convert_to_si(frequency)}Hz.png CREATED")
     plt.clf()
 
@@ -91,7 +91,7 @@ def plot_differences_between_pred_and_calc(frequency, transmitter):
     plt.clim(v_min, v_max)
     cbar.set_label('Received Power (dBm)')
     plt.savefig(
-        f"main/IMGS/RP_DIFF/CALC_{name}_{convert_to_si(frequency)}Hz_ERROR:{ERROR:.3f}.png")
+        f"simulation/IMGS/RP_DIFF/CALC_{name}_{convert_to_si(frequency)}Hz_ERROR:{ERROR:.3f}.png")
     print(f"DIFF_CALC_{name}_{convert_to_si(frequency)}Hz.png CREATED")
     print(f"ERROR: {ERROR:.3f}")
     plt.clf()
@@ -110,7 +110,7 @@ def plot_differences_between_pred_and_calc(frequency, transmitter):
     plt.clim(v_min, v_max)
     cbar.set_label('Received Power (dBm)')
     plt.savefig(
-        f"main/IMGS/RP_DIFF/PRED_{name}_{convert_to_si(frequency)}Hz_ERROR:{ERROR:.3f}.png")
+        f"simulation/IMGS/RP_DIFF/PRED_{name}_{convert_to_si(frequency)}Hz_ERROR:{ERROR:.3f}.png")
     print(f"DIFF_PRED_{name}_{convert_to_si(frequency)}Hz.png CREATED")
     print(f"ERROR: {ERROR:.3f}")
     plt.clf()
@@ -143,7 +143,7 @@ def plot_abs_differences_between_pred_and_calc(frequency, transmitter):
     plt.clim(0, v_max)
     cbar.set_label('Received Power (dBm)')
     plt.savefig(
-        f"main/IMGS/RP_ABS_DIFF/CALC_{name}_{convert_to_si(frequency)}Hz_ERROR:{ERROR:.3f}.png")
+        f"simulation/IMGS/RP_ABS_DIFF/CALC_{name}_{convert_to_si(frequency)}Hz_ERROR:{ERROR:.3f}.png")
     print(f"DIFF_CALC_{name}_{convert_to_si(frequency)}Hz.png CREATED")
     print(f"ERROR: {ERROR:.3f}")
     plt.clf()
@@ -161,7 +161,7 @@ def plot_abs_differences_between_pred_and_calc(frequency, transmitter):
     plt.clim(0, v_max)
     cbar.set_label('Received Power (dBm)')
     plt.savefig(
-        f"main/IMGS/RP_ABS_DIFF/PRED_{name}_{convert_to_si(frequency)}Hz_ERROR:{ERROR:.3f}.png")
+        f"simulation/IMGS/RP_ABS_DIFF/PRED_{name}_{convert_to_si(frequency)}Hz_ERROR:{ERROR:.3f}.png")
     print(f"DIFF_PRED_{name}_{convert_to_si(frequency)}Hz.png CREATED")
     print(f"ERROR: {ERROR:.3f}")
     plt.clf()
@@ -188,7 +188,7 @@ def plot_received_and_observer_predicted(frequency, transmitter):
     cbar = plt.colorbar(fig)
     plt.clim(v_min, v_max)
     cbar.set_label('Received Power (dBm)')
-    plt.savefig(f"main/IMGS/RP/RP_{name}_{convert_to_si(frequency)}Hz.png")
+    plt.savefig(f"simulation/IMGS/RP/RP_{name}_{convert_to_si(frequency)}Hz.png")
     print(f"{name}_{convert_to_si(frequency)}Hz.png CREATED")
     plt.clf()
 
@@ -203,7 +203,7 @@ def plot_received_and_observer_predicted(frequency, transmitter):
     cbar = plt.colorbar(fig)
     plt.clim(v_min, v_max)
     cbar.set_label('Received Power (dBm)')
-    plt.savefig(f"main/IMGS/RP/PPB_{name}_{convert_to_si(frequency)}Hz.png")
+    plt.savefig(f"simulation/IMGS/RP/PPB_{name}_{convert_to_si(frequency)}Hz.png")
     print(f"CAL_{name}_{convert_to_si(frequency)}Hz.png CREATED")
     plt.clf()
 
@@ -234,7 +234,7 @@ def plot_diffence_of_error(frequency, transmitter):
     plt.clim(-20, 20)
     cbar.set_label('Received Power (dBm)')
     plt.savefig(
-        f"main/IMGS/RP_ERROR_DIFF/{name}_{convert_to_si(frequency)}Hz.png")
+        f"simulation/IMGS/RP_ERROR_DIFF/{name}_{convert_to_si(frequency)}Hz.png")
     print(f"RP_ERROR_DIFF_{name}_{convert_to_si(frequency)}Hz.png CREATED")
     plt.clf()
 
@@ -268,7 +268,7 @@ def plot_differenc_of_error_with_friis(frequency,transmitter):
     plt.clim(-20, 20)
     cbar.set_label('Received Power (dBm)')
     plt.savefig(
-        f"main/IMGS/RP_DIFF_FRIIS_BETW_PRED/{name}_{convert_to_si(frequency)}Hz.png")
+        f"simulation/IMGS/RP_DIFF_FRIIS_BETW_PRED/{name}_{convert_to_si(frequency)}Hz.png")
     print(f"RP_DIFF_FRIIS_BETW_PRED_{name}_{convert_to_si(frequency)}Hz.png CREATED")
     plt.clf()
 

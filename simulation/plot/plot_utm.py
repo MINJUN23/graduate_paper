@@ -14,7 +14,7 @@ def plot_korea_utm():
     cbar = plt.colorbar(fig)
     cbar.set_label('Height, m')
     plt.savefig(
-        f"main/IMGS/UTM/KOREA.png")
+        f"simulation/IMGS/UTM/KOREA.png")
     print(f"KOREA.png CREATED")
     plt.clf()
 
@@ -34,6 +34,6 @@ def plot_utm_near_transmitter(transmitter):
     cbar = plt.colorbar(fig)
     cbar.set_label('Height, m')
     plt.savefig(
-        f"main/IMGS/UTM/NEAR_{name}.png")
+        f"simulation/IMGS/UTM/NEAR_{name}.png")
     print(f"NEAR_{name}.png CREATED")
     plt.clf()
