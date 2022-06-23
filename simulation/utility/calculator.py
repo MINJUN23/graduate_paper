@@ -36,7 +36,6 @@ def get_max_v(dted_data, f, t_ix, t_iy, t_h, r_ix, r_iy, r_h):
         max_V =v_info_list[max_V_INDEX]
         return max_V
 
-
 def get_observer_predicted_v(dted_data, f, t_ix, t_iy, t_h, r_ix, r_iy, r_h):
     if abs(t_ix - r_ix)<= 3 and abs(t_iy - r_iy)<=3:
         return np.nan
@@ -155,7 +154,6 @@ def get_info_about_observer_predicted_power(dted_data, t_ix, t_iy, t_h, r_ix, r_
     H = z - r_z
     return {"R":R, "D":D, "H":H}
 
-
 def get_received_power(dted_data, f, t_ix, t_iy, t_h, r_ix, r_iy, r_h):
     if abs(t_ix - r_ix)<= 3 and abs(t_iy - r_iy)<=3:
         return np.nan
@@ -178,7 +176,6 @@ def get_received_power(dted_data, f, t_ix, t_iy, t_h, r_ix, r_iy, r_h):
     loss = get_deygout_loss(f,dot_list)
     rp = get_friis_gain(f,D) - loss
     return rp
-
 #첫 점, 끝점에 th, rh 더해줘야 함, dot은 x,y,z정보를 가짐
 def get_deygout_loss(f,dot_list): 
     if len(dot_list)<3:

@@ -13,7 +13,6 @@ def print_process(current_index, whole, name=""):
     else:
         print(f'\r{name} PROCESSING 100%')
 
-
 def convert_to_si(num):
     K = 1000
     M = 1000000
@@ -30,14 +29,12 @@ def convert_to_si(num):
     elif num >= T:
         return f"{num/T}T"
 
-
 def get_index(dted_data, t_lon, t_lat):
     t_ix = np.absolute(
         dted_data["grid_lon"] - t_lon).argmin()  # nearest lon index
     t_iy = np.absolute(
         dted_data["grid_lat"] - t_lat).argmin()  # nearest lat index
     return (t_ix, t_iy)
-
 
 def close_bound(bounding_num, center_num):
     bounding_num = float(bounding_num)
@@ -49,13 +46,11 @@ def close_bound(bounding_num, center_num):
     else:
         return round(bounding_num)
 
-
 def get_range(start, end):
     if start <= end:
         return range(start, end+1)
     else:
         return range(start, end-1, -1)
-
 
 def get_dots_in_line(t_ix, t_iy, r_ix, r_iy):
     dots_in_line = []
@@ -93,13 +88,11 @@ def get_dots_in_line(t_ix, t_iy, r_ix, r_iy):
     dots_in_line.sort(key=lambda dot:(t_ix-dot[0])*(t_ix-dot[0])+(t_iy-dot[1])*(t_iy-dot[1]))
     return dots_in_line
 
-
 def get_friis_gain(f, r):
     try:
         return 10 * log10(c*c/((4*pi*r*f) * (4*pi*r*f)))
     except Exception:
         return np.NaN
-
 
 def get_v_factor(h, f, d1, d2):
     if h == 0:
@@ -108,7 +101,6 @@ def get_v_factor(h, f, d1, d2):
         return h * sqrt(2*f*(d1+d2)/(c*d1*d2))
     except Exception:
         return np.NaN
-
 
 def get_loss_by_knife_edge(v):
     try:
@@ -127,8 +119,6 @@ def get_received_power_using_r(f,r,v):
         return get_friis_gain(f, r) - loss
     except Exception:
         return np.NaN
-    
-
 
 def get_received_power_using_raw_data(f, r, h, d1, d2):
     try:

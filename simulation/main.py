@@ -4,7 +4,7 @@ import pandas as pd
 from environments.transmitter import all_transmitters
 from plot.plot_received_power import plot_differenc_of_error_with_friis
 from utility.utility import convert_to_si
-frequency_list = [80000000, 90000000, 100000000]
+frequency_list = [100000000]
 
 data = pd.DataFrame()
 for frequency in frequency_list:

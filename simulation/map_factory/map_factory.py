@@ -15,7 +15,6 @@ def get_height_map(t_lon, t_lat):
         dted_data["grid_lat"] - t_lat).argmin()  # nearest lat index
     return dted_data["grid_height"][index_lat][index_lon]
 
-
 def get_distance_map(t_lon=127.3845, t_lat=36.3504, span_lon=1.0, span_lat=1.0):
     t_x, t_y = to_utm(t_lon, t_lat)
     t_z = get_height(t_lon, t_lat)
@@ -47,7 +46,6 @@ def get_distance_map(t_lon=127.3845, t_lat=36.3504, span_lon=1.0, span_lat=1.0):
         print_process(r_iy, len(dted_data["grid_lat"]))
     return {"X": utm_x_all, "Y": utm_y_all, "R": utm_r_all}
 
-
 def get_slope_map(t_lon=127.3845, t_lat=36.3504, span_lon=1.0, span_lat=1.0):
     dted_data = get_local_dted(t_lon, t_lat, span_lon, span_lat)
     t_x, t_y = to_utm(t_lon, t_lat)
@@ -77,7 +75,6 @@ def get_slope_map(t_lon=127.3845, t_lat=36.3504, span_lon=1.0, span_lat=1.0):
         print_process(r_iy, len(dted_data["grid_lat"]))
     return {"X": utm_x_all, "Y": utm_y_all, "S": utm_slope_all}
 
-
 def get_v_map(f, t_h=10, r_h=10, t_lon=127.3845, t_lat=36.3504, span_lon=1.0, span_lat=1.0):
     dted_data = get_local_dted(t_lon, t_lat, span_lon, span_lat)
     t_ix, t_iy = get_index(dted_data, t_lon, t_lat)
@@ -98,7 +95,6 @@ def get_v_map(f, t_h=10, r_h=10, t_lon=127.3845, t_lat=36.3504, span_lon=1.0, sp
     LON, LAT = np.meshgrid(
         dted_data["grid_lon"], dted_data["grid_lat"])   # lon & lat tiles
     return {"X": LON, "Y": LAT, "V": V_ALL, "H": H_ALL}
-
 
 def get_received_power_map(f, t_h=10, r_h=10, t_lon=127.3845, t_lat=36.3504, span_lon=1.0, span_lat=1.0):
     dted_data = get_local_dted(t_lon, t_lat, span_lon, span_lat)
@@ -169,7 +165,6 @@ def get_observer_predicted_v_map(f, t_h=10, r_h=10, t_lon=127.3845, t_lat=36.350
         dted_data["grid_lon"], dted_data["grid_lat"])   # lon & lat tiles
     return {"X": LON, "Y": LAT, "V": V_all}
 
-
 def get_csv_map(f, t_h=10, r_h=10, t_lon=127.3845, t_lat=36.3504, span_lon=1.0, span_lat=1.0):
     dted_data = get_local_dted(t_lon, t_lat, span_lon, span_lat)
     t_ix, t_iy = get_index(dted_data, t_lon, t_lat)
@@ -197,7 +192,6 @@ def get_csv_map(f, t_h=10, r_h=10, t_lon=127.3845, t_lat=36.3504, span_lon=1.0, 
         H_all.append(H_row)
         print_process(r_iy, len(dted_data["grid_lat"]))
     return {"RP": RP_all, "R": R_all, "D": D_all, "H": H_all}
-
 
 def get_predicted_power_map(f, t_h=10, r_h=10, t_lon=127.3845, t_lat=36.3504, span_lon=1.0, span_lat=1.0):
     dted_data = get_local_dted(t_lon, t_lat, span_lon, span_lat)

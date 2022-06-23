@@ -1,7 +1,6 @@
 from math import log10
 import pandas as pd
 import numpy as np
-from map_factory.dted import get_local_dted
 from map_factory.map_factory import get_csv_map
 from utility.utility import convert_to_si
 
@@ -12,7 +11,6 @@ def create_CSV(transmitters, frequency_list):
         {"R": [], "D": [], "H": [], "RP": []})
     for transmitter in transmitters:
         name, t_lon, t_lat, span_lon, span_lat, t_h = transmitter()
-        dted_data = get_local_dted(t_lon, t_lat, span_lon, span_lat)
         # MATRIX OF (r, (h,d1,d2)) TUPLE. MidHeight would be none if there is no midheight
         for f in frequency_list:
             DATA = get_csv_map(

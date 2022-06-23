@@ -10,9 +10,8 @@ matplotlib = "*"
 pyproj = "*"
 mplcursors = "*"
 sklearn = "*"
-h5py = "*"
-keras = "*"
 joblib = "*"
+tensorflow = "*"
 
 [dev-packages]
 ipykernel = "*"
