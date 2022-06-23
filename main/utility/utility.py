@@ -6,12 +6,12 @@ from pyproj import Proj
 to_utm = Proj(proj='utm', zone=52, ellps='WGS84', preserve_units=False)
 c = 299792458
 
-def print_process(current_index, whole):
+def print_process(current_index, whole, name=""):
     percent = int((current_index+1)/whole*100)
     if current_index+1!=whole:
-        print(f'\rPROCESSING {percent}%', end='', flush=True)
+        print(f'\r{name} PROCESSING {percent}%', end='', flush=True)
     else:
-        print('\rPROCESSING 100%')
+        print(f'\r{name} PROCESSING 100%')
 
 
 def convert_to_si(num):
@@ -88,8 +88,7 @@ def get_dots_in_line(t_ix, t_iy, r_ix, r_iy):
                                      for iy in list(get_range(min_bound, max_bound))]
             dots_in_line += [(r_ix, r_iy+iy)
                              for iy in list(get_range(0, close_bound(0.5*a, 0)))]
-    # dots_in_line.remove((t_ix, t_iy))
-    # dots_in_line.remove((r_ix, r_iy))
+
     
     dots_in_line.sort(key=lambda dot:(t_ix-dot[0])*(t_ix-dot[0])+(t_iy-dot[1])*(t_iy-dot[1]))
     return dots_in_line

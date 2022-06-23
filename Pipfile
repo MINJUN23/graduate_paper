@@ -9,10 +9,10 @@ pandas = "*"
 matplotlib = "*"
 pyproj = "*"
 mplcursors = "*"
-tensorflow = "*"
 sklearn = "*"
 h5py = "*"
-tensorflow-macos = "*"
+keras = "*"
+joblib = "*"
 
 [dev-packages]
 ipykernel = "*"

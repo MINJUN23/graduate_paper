@@ -48,37 +48,6 @@ def get_distance_map(t_lon=127.3845, t_lat=36.3504, span_lon=1.0, span_lat=1.0):
     return {"X": utm_x_all, "Y": utm_y_all, "R": utm_r_all}
 
 
-def get_difference_map(t_lon=127.3845, t_lat=36.3504, span_lon=1.0, span_lat=1.0):
-    dted_data = get_local_dted(t_lon, t_lat, span_lon, span_lat)
-    t_x, t_y = to_utm(t_lon, t_lat)
-    t_z = get_height(t_lon, t_lat)
-    utm_x_all = []
-    utm_y_all = []
-    utm_d_all = []
-    for r_iy in range(len(dted_data["grid_lat"])):
-        utm_x_row = []
-        utm_y_row = []
-        utm_d_row = []
-        for r_ix in range(len(dted_data["grid_lon"])):
-            x, y = to_utm(dted_data["grid_lon"][r_ix],
-                          dted_data["grid_lat"][r_iy])
-            z = dted_data["grid_height"][r_iy][r_ix]
-            d = sqrt((t_x - x)*(t_x - x) + (t_y - y) * (t_y - y) + (t_z - z)
-                     * (t_z - z)) - sqrt((t_x - x)*(t_x - x) + (t_y - y) * (t_y - y))
-            x = int(x)
-            y = int(y)
-            d = int(d)
-            utm_x_row.append(x)
-            utm_y_row.append(y)
-            utm_d_row.append(d)
-        utm_x_all.append(utm_x_row)
-        utm_y_all.append(utm_y_row)
-        utm_d_all.append(utm_d_row)
-
-        print_process(r_iy, len(dted_data["grid_lat"]))
-    return {"X": utm_x_all, "Y": utm_y_all, "D": utm_d_all}
-
-
 def get_slope_map(t_lon=127.3845, t_lat=36.3504, span_lon=1.0, span_lat=1.0):
     dted_data = get_local_dted(t_lon, t_lat, span_lon, span_lat)
     t_x, t_y = to_utm(t_lon, t_lat)
@@ -148,7 +117,21 @@ def get_received_power_map(f, t_h=10, r_h=10, t_lon=127.3845, t_lat=36.3504, spa
         dted_data["grid_lon"], dted_data["grid_lat"])   # lon & lat tiles
     return {"X": LON, "Y": LAT, "RP": RP_all}
 
-
+def get_friis_power_map(f, t_h=10, r_h=10, t_lon=127.3845, t_lat=36.3504, span_lon=1.0, span_lat=1.0):
+    dted_data = get_local_dted(t_lon, t_lat, span_lon, span_lat)
+    t_ix, t_iy = get_index(dted_data, t_lon, t_lat)
+    # MATRIX OF (d, (h,d1,d2)) TUPLE. MidHeight would be none if there is no midheight
+    RP_all = []
+    for r_iy in range(len(dted_data["grid_lat"])):
+        RP_row = []
+        for r_ix in range(len(dted_data["grid_lon"])):
+            RP = get_friis_power(dted_data, f, t_ix, t_iy, t_h, r_ix, r_iy, r_h)
+            RP_row.append(RP)
+        RP_all.append(RP_row)
+        print_process(r_iy, len(dted_data["grid_lat"]))
+    LON, LAT = np.meshgrid(
+        dted_data["grid_lon"], dted_data["grid_lat"])   # lon & lat tiles
+    return {"X": LON, "Y": LAT, "RP": RP_all}
 
 def get_observer_predicted_power_map(f, t_h=10, r_h=10, t_lon=127.3845, t_lat=36.3504, span_lon=1.0, span_lat=1.0):
     dted_data = get_local_dted(t_lon, t_lat, span_lon, span_lat)
@@ -230,7 +213,7 @@ def get_predicted_power_map(f, t_h=10, r_h=10, t_lon=127.3845, t_lat=36.3504, sp
                 INPUT = pd.DataFrame([[INFO["R"], INFO["D"], INFO["H"], log10(f)]], columns=[
                                      "R", 'D', "H", "F"])
                 INPUT = scaler.transform(INPUT)
-                RP = model.predict(INPUT)[0][0]
+                RP = model.predict(INPUT,verbose=0)[0][0]
                 RP_row.append(RP)
             except Exception as e:
                 print(e)

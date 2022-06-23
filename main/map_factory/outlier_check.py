@@ -44,7 +44,7 @@ def check_outlier_error(frequency, transmitter):
             INPUT = pd.DataFrame([[INFO["R"], INFO["D"], INFO["H"], log10(frequency)]], columns=[
                 "R", 'D', "H", "F"])
             INPUT = scaler.transform(INPUT)
-            PRED = model.predict(INPUT)[0][0]
+            PRED = model.predict(INPUT, verbose=0)[0][0]
             PRED_ERRORS.append(abs(PRED - OUTLIER["RP"]))
             CALC = get_observer_predicted_power(
                 dted_data, frequency, t_ix, t_iy, t_h, r_ix, r_iy, r_h)

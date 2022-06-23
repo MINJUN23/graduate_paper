@@ -63,7 +63,7 @@ def plot_predicted_power_near_transmitter(frequency, transmitter):
     plt.clf()
 
 
-def plot_differences(frequency, transmitter):
+def plot_differences_between_pred_and_calc(frequency, transmitter):
     name, t_lon, t_lat, span_lon, span_lat, t_h = transmitter()
     REAL = get_received_power_map(
         frequency, t_h, r_h, t_lon, t_lat, span_lon, span_lat)
@@ -115,7 +115,7 @@ def plot_differences(frequency, transmitter):
     print(f"ERROR: {ERROR:.3f}")
     plt.clf()
 
-def plot_abs_differences(frequency, transmitter):
+def plot_abs_differences_between_pred_and_calc(frequency, transmitter):
     name, t_lon, t_lat, span_lon, span_lat, t_h = transmitter()
     REAL = get_received_power_map(
         frequency, t_h, r_h, t_lon, t_lat, span_lon, span_lat)
@@ -237,3 +237,40 @@ def plot_diffence_of_error(frequency, transmitter):
         f"main/IMGS/RP_ERROR_DIFF/{name}_{convert_to_si(frequency)}Hz.png")
     print(f"RP_ERROR_DIFF_{name}_{convert_to_si(frequency)}Hz.png CREATED")
     plt.clf()
+
+    return {"PRED_ERROR": PRED_ERRORS.stack().mean(), "CALC_ERROR": CALC_ERRORS.stack().mean()}
+
+
+def plot_differenc_of_error_with_friis(frequency,transmitter):
+    name, t_lon, t_lat, span_lon, span_lat, t_h = transmitter()
+    REAL = get_received_power_map(
+        frequency, t_h, r_h, t_lon, t_lat, span_lon, span_lat)
+    FRIIS = get_friis_power_map(
+        frequency, t_h, r_h, t_lon, t_lat, span_lon, span_lat)
+    FRIIS_DIFFERENCE = pd.DataFrame(REAL["RP"]) - pd.DataFrame(FRIIS["RP"])
+    FRIIS_ERRORS = FRIIS_DIFFERENCE.abs()
+
+    PRED = get_predicted_power_map(
+        frequency, t_h, r_h, t_lon, t_lat, span_lon, span_lat)
+    PRED_DIFFERENCE = pd.DataFrame(REAL["RP"]) - pd.DataFrame(PRED["RP"])
+    PRED_ERRORS = PRED_DIFFERENCE.abs()
+ 
+    ERROR_DIFFRENCE = PRED_ERRORS - FRIIS_ERRORS
+
+    fig = plt.pcolormesh(
+        REAL["X"], REAL["Y"], ERROR_DIFFRENCE, shading="auto", cmap='RdBu')
+    fig.axes.set_aspect("equal")
+    plt.plot(t_lon, t_lat, "ro", markersize=2)
+    plt.xlabel("LAT, (degree)")
+    plt.ylabel("LON, (degree)")
+    plt.title(f"PRED Error - FRIIS Error ({name} {convert_to_si(frequency)}Hz)")
+    cbar = plt.colorbar(fig)
+    plt.clim(-20, 20)
+    cbar.set_label('Received Power (dBm)')
+    plt.savefig(
+        f"main/IMGS/RP_DIFF_FRIIS_BETW_PRED/{name}_{convert_to_si(frequency)}Hz.png")
+    print(f"RP_DIFF_FRIIS_BETW_PRED_{name}_{convert_to_si(frequency)}Hz.png CREATED")
+    plt.clf()
+
+    return {"PRED_ERROR": PRED_ERRORS.stack().mean(), "FRIIS_ERROR": FRIIS_ERRORS.stack().mean()}
+    

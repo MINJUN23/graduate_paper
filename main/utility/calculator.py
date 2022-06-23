@@ -111,6 +111,16 @@ def get_observer_predicted_power(dted_data, f, t_ix, t_iy, t_h, r_ix, r_iy, r_h)
     v = get_v_factor(h,f,D-d2,d2)
     return get_received_power_using_r(f,D,v)
 
+def get_friis_power(dted_data, f, t_ix, t_iy, t_h, r_ix, r_iy, r_h):
+    if abs(t_ix - r_ix)<= 3 and abs(t_iy - r_iy)<=3:
+        return np.nan
+    t_x, t_y = to_utm(dted_data["grid_lon"][t_ix], dted_data["grid_lat"][t_iy])
+    r_x, r_y = to_utm(dted_data["grid_lon"][r_ix], dted_data["grid_lat"][r_iy])
+    t_z = dted_data["grid_height"][t_iy][t_ix] + t_h
+    r_z = dted_data["grid_height"][r_iy][r_ix] + r_h
+    D = sqrt((t_x-r_x)*(t_x-r_x) + (t_y-r_y)*(t_y-r_y) + (t_z-r_z)*(t_z-r_z))
+    return get_friis_gain(f,D)
+
 def get_info_about_observer_predicted_power(dted_data, t_ix, t_iy, t_h, r_ix, r_iy, r_h):
     if abs(t_ix - r_ix)<= 3 and abs(t_iy - r_iy)<=3:
         return {"R":np.nan, "D":np.nan, "H":np.nan}
