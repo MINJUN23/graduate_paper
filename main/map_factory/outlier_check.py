@@ -1,7 +1,8 @@
 from map_factory.map_factory import get_received_power, get_index
-from map_factory.get_map import get_local_dted, get_height
-from map_factory.utility.utility import get_observer_predicted_power, get_info_about_observer_predicted_power, convert_to_si
-from map_factory.utility.model import scaler, model
+from map_factory.dted import get_local_dted
+from utility.utility import *
+from utility.calculator import *
+from environments.model import scaler, model
 from math import log10
 import pandas as pd
 import numpy as np
@@ -16,12 +17,13 @@ def check_outlier_error(frequency, transmitter):
 
     # MATRIX OF (d, (h,d1,d2)) TUPLE. MidHeight would be none if there is no midheight
     INFO_LIST = []
-    for y in range(len(dted_data["grid_lat"])):
-        for x in range(len(dted_data["grid_lon"])):
+    for r_iy in range(len(dted_data["grid_lat"])):
+        for r_ix in range(len(dted_data["grid_lon"])):
             RP = get_received_power(
-                dted_data, frequency, t_ix, t_iy, t_h, x, y, r_h)
+                dted_data, frequency, t_ix, t_iy, t_h, r_ix, r_iy, r_h)
             if not np.isnan(RP):
-                INFO_LIST.append({"RP": RP, "x": x, "y": y})
+                INFO_LIST.append({"RP": RP, "r_ix": r_ix, "r_iy": r_iy})
+        print_process(r_iy, len(dted_data["grid_lat"]))
     
     INFO_LIST.sort(key=lambda INFO: INFO["RP"])
 
@@ -34,10 +36,10 @@ def check_outlier_error(frequency, transmitter):
     if len(OUTLIERS) != 0 :
         PRED_ERRORS, CALC_ERRORS = [], []
         for OUTLIER in OUTLIERS:
-            x, y = OUTLIER["x"], OUTLIER["y"]
+            r_ix, r_iy = OUTLIER["r_ix"], OUTLIER["r_iy"]
 
             INFO = get_info_about_observer_predicted_power(
-                dted_data, t_ix, t_iy, t_h, x, y, r_h)
+                dted_data, t_ix, t_iy, t_h, r_ix, r_iy, r_h)
             # ,R,D,H,F
             INPUT = pd.DataFrame([[INFO["R"], INFO["D"], INFO["H"], log10(frequency)]], columns=[
                 "R", 'D', "H", "F"])
@@ -45,7 +47,7 @@ def check_outlier_error(frequency, transmitter):
             PRED = model.predict(INPUT)[0][0]
             PRED_ERRORS.append(abs(PRED - OUTLIER["RP"]))
             CALC = get_observer_predicted_power(
-                dted_data, frequency, t_ix, t_iy, t_h, x, y, r_h)
+                dted_data, frequency, t_ix, t_iy, t_h, r_ix, r_iy, r_h)
             CALC_ERRORS.append(abs(CALC - OUTLIER["RP"]))
         PRED_ERROR = sum(PRED_ERRORS) / len(PRED_ERRORS)
         CALC_ERROR = sum(CALC_ERRORS) / len(CALC_ERRORS)

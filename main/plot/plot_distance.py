@@ -1,10 +1,6 @@
 import matplotlib.pyplot as plt
 from map_factory.map_factory import get_distance_map, get_difference_map, get_slope_map
-from environments.transmitter import transmitters
-from map_factory.utility.utility import to_utm
-# 대전의 위도 : 36.3504° N
-# 대전의 경도 : 127.3845° E
-
+from utility.utility import to_utm
 
 def plot_distance_from_transmitter(transmitter):
     name, t_lon, t_lat, span_lon, span_lat, _ = transmitter()
@@ -61,7 +57,3 @@ def plot_slope_from_transmitter(transmitter):
     plt.savefig(f"main/IMGS/DISTANCE/slope_{name}.png")
     print(f"slope_{name}.png CREATED")
     plt.clf()
-
-
-for transmitter in transmitters:
-    plot_slope_from_transmitter(transmitter)
